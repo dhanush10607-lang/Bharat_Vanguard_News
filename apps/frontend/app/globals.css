@@ -1,0 +1,285 @@
+/* ============================================================
+   TruthLens AI — Global Styles
+   Dark, premium news intelligence platform aesthetic
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties ── */
+:root {
+  --color-bg:         #080D1A;
+  --color-surface:    #0F1629;
+  --color-surface-2:  #161E36;
+  --color-border:     #1E2A45;
+  --color-primary:    #3B82F6;
+  --color-emerald:    #10B981;
+  --color-amber:      #F59E0B;
+  --color-rose:       #F43F5E;
+  --color-text:       #F0F4FF;
+  --color-muted:      #8B9DC3;
+  --transition-fast:  150ms ease;
+  --transition-base:  250ms ease;
+  --transition-slow:  400ms ease;
+}
+
+/* ── Base Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #fff;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar          { width: 6px; height: 6px; }
+::-webkit-scrollbar-track    { background: var(--color-bg); }
+::-webkit-scrollbar-thumb    { background: var(--color-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+h2 { font-size: clamp(1.25rem, 3vw, 1.875rem); }
+h3 { font-size: clamp(1rem,   2vw, 1.375rem); }
+
+p { color: #8B9DC3; line-height: 1.7; }
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+/* ============================================================
+   COMPONENT LAYER — Reusable utility classes
+   ============================================================ */
+@layer components {
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-surface border border-border rounded-2xl overflow-hidden
+           transition-all duration-300;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(30,42,69,0.8);
+  }
+
+  .card:hover {
+    @apply border-border-2;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(59,130,246,0.2);
+    transform: translateY(-2px);
+  }
+
+  .card-glass {
+    background: rgba(15, 22, 41, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(30, 42, 69, 0.8);
+    @apply rounded-2xl;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    @apply inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm
+           transition-all duration-200 cursor-pointer select-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-dark;
+    box-shadow: 0 0 20px rgba(59,130,246,0.25);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 30px rgba(59,130,246,0.4);
+  }
+
+  .btn-ghost {
+    @apply btn text-text-secondary hover:text-text-primary hover:bg-surface-2;
+  }
+
+  .btn-outline {
+    @apply btn border border-border text-text-secondary hover:border-primary hover:text-primary;
+  }
+
+  .btn-google {
+    @apply btn border border-border bg-surface text-text-primary w-full justify-center
+           hover:border-primary/50 hover:bg-surface-2;
+  }
+
+  /* ── Badges / Tags ── */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-lg text-2xs font-semibold
+           uppercase tracking-wide;
+  }
+
+  .badge-tech       { @apply badge bg-primary/10 text-primary-light; }
+  .badge-world      { @apply badge bg-purple-500/10 text-purple-400; }
+  .badge-business   { @apply badge bg-amber/10 text-amber-light; }
+  .badge-science    { @apply badge bg-emerald/10 text-emerald-light; }
+  .badge-health     { @apply badge bg-rose/10 text-rose-400; }
+  .badge-india      { @apply badge bg-orange-500/10 text-orange-400; }
+  .badge-sports     { @apply badge bg-sky-500/10 text-sky-400; }
+  .badge-ai         { @apply badge bg-violet-500/10 text-violet-400; }
+  .badge-default    { @apply badge bg-surface-2 text-text-muted; }
+
+  /* ── Trust / Confidence Score ── */
+  .trust-score-high   { @apply text-emerald font-semibold; }
+  .trust-score-medium { @apply text-amber font-semibold; }
+  .trust-score-low    { @apply text-rose font-semibold; }
+
+  /* ── Input ── */
+  .input {
+    @apply w-full bg-surface border border-border rounded-xl px-4 py-2.5
+           text-text-primary placeholder:text-text-muted text-sm
+           focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20
+           transition-all duration-200;
+  }
+
+  /* ── Section ── */
+  .section { @apply py-8 md:py-12; }
+  .section-title {
+    @apply text-xl font-bold text-text-primary mb-1;
+  }
+  .section-subtitle {
+    @apply text-sm text-text-muted mb-6;
+  }
+
+  /* ── Divider ── */
+  .divider { @apply border-t border-border; }
+
+  /* ── Loading skeleton ── */
+  .skeleton {
+    @apply bg-surface-2 rounded-lg animate-pulse;
+    background: linear-gradient(
+      90deg,
+      #161E36 25%,
+      #1E2A45 50%,
+      #161E36 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  /* ── Article body typography ── */
+  .article-body {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: #C5D0E8;
+  }
+
+  .article-body p     { @apply mb-5; }
+  .article-body h2    { @apply mt-8 mb-3 text-text-primary font-sans; }
+  .article-body h3    { @apply mt-6 mb-2 text-text-primary font-sans; }
+  .article-body ul    { @apply mb-5 pl-5 space-y-1.5; }
+  .article-body ol    { @apply mb-5 pl-5 space-y-1.5; }
+  .article-body li    { @apply list-disc text-text-secondary; }
+  .article-body a     { @apply text-primary-light underline underline-offset-2; }
+  .article-body strong{ @apply text-text-primary font-semibold; }
+
+  /* ── Navbar blur ── */
+  .navbar-blur {
+    background: rgba(8, 13, 26, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(30, 42, 69, 0.8);
+  }
+}
+
+/* ============================================================
+   UTILITY LAYER
+   ============================================================ */
+@layer utilities {
+  /* Hero background glow */
+  .bg-hero-glow {
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.12), transparent);
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 40%, #10B981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, #93C5FD 0%, #3B82F6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow dot (live indicator) */
+  .dot-live {
+    @apply w-2 h-2 rounded-full bg-rose animate-pulse;
+    box-shadow: 0 0 6px rgba(244, 63, 94, 0.7);
+  }
+
+  .dot-online {
+    @apply w-2 h-2 rounded-full bg-emerald;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.7);
+  }
+
+  /* Line clamp shortcuts */
+  .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* Gradient border */
+  .border-gradient {
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+
+  /* Noise texture overlay (subtle, premium) */
+  .noise-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.4;
+  }
+}
+
+/* ── Page transition wrapper ── */
+.page-enter {
+  animation: fadeUp 0.4s ease-out;
+}
+
+/* ── Prose for article content ── */
+.prose-dark {
+  color: #C5D0E8;
+}
