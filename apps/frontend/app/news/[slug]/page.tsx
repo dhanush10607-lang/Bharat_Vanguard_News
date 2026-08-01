@@ -166,7 +166,7 @@ export default async function ArticlePage({ params }: Props) {
                     {article.summary_bullets.map((point, i) => (
                       <li key={i} className="flex items-start gap-3 text-base sm:text-lg text-text-secondary leading-relaxed">
                         <span className="text-primary mt-1 text-xl">•</span>
-                        <span>{point}</span>
+                        <TypewriterEffect text={point} className="flex-1" />
                       </li>
                     ))}
                   </ul>
