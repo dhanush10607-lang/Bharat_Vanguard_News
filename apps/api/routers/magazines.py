@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List, Dict, Any
 
-from apps.api.deps import get_db
+from shared.database import get_db
 from shared.models.magazines import Magazine
 
 router = APIRouter(tags=["Magazines"])
