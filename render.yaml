@@ -39,7 +39,7 @@ services:
     name: bvn-nlp-worker
     runtime: python
     region: oregon
-    plan: free
+    plan: starter
     rootDir: .
     buildCommand: pip install -r requirements-nlp.txt && python -m spacy download en_core_web_sm
     schedule: "*/30 * * * *"    # Every 30 minutes
@@ -60,7 +60,7 @@ services:
     name: bvn-rss-collector
     runtime: python
     region: oregon
-    plan: free
+    plan: starter
     rootDir: .
     buildCommand: pip install -r requirements.txt
     schedule: "*/15 * * * *"    # Every 15 minutes
@@ -81,7 +81,7 @@ services:
     name: bvn-guardian-collector
     runtime: python
     region: oregon
-    plan: free
+    plan: starter
     rootDir: .
     buildCommand: pip install -r requirements.txt
     schedule: "0 */6 * * *"     # Every 6 hours
