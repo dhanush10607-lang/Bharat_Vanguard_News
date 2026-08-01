@@ -1,4 +1,4 @@
-name: TruthLens AI CI/CD
+name: Bharat Vanguard News CI/CD
 
 on:
   push:
@@ -69,7 +69,7 @@ jobs:
       - name: Build frontend
         working-directory: apps/frontend
         env:
-          NEXT_PUBLIC_API_URL: "https://truthlens-api.onrender.com"
+          NEXT_PUBLIC_API_URL: "https://bharat-vanguard-news.vercel.app"
         run: npm run build
 
   # ── Deploy to Render (main branch only) ─────────────────────

@@ -19,7 +19,9 @@
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.5.2",
     "lucide-react": "^0.441.0",
-    "sonner": "^1.5.0"
+    "sonner": "^1.5.0",
+    "next-themes": "^0.3.0",
+    "@vercel/analytics": "^1.3.1"
   },
   "devDependencies": {
     "typescript": "^5.5.4",
