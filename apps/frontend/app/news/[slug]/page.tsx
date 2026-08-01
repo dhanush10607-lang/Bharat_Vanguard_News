@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Clock, ExternalLink, User, Globe, ArrowLeft } from 'lucide-react';
 import { articlesApi } from '@/lib/api';
 import { TrustScore } from '@/components/news/TrustScore';
+import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
 import { getCategoryBadgeClass, formatDate, formatRelative, getCountryFlag } from '@/lib/utils';
 
 interface Props {
@@ -170,7 +171,7 @@ export default async function ArticlePage({ params }: Props) {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-base sm:text-lg text-text-secondary leading-relaxed">{article.summary_medium}</p>
+                  <TypewriterEffect text={article.summary_medium} className="block text-base sm:text-lg text-text-secondary leading-relaxed" />
                 )}
               </div>
             )}

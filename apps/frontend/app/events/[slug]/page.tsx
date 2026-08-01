@@ -7,6 +7,7 @@ import { Clock, Shield, Users, ExternalLink, Globe, ArrowLeft, CheckCircle } fro
 import { motion } from 'framer-motion';
 import { eventsApi } from '@/lib/api';
 import { TrustScore } from '@/components/news/TrustScore';
+import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
 import {
   formatRelative, formatDate, getCategoryBadgeClass, getTrustClass,
   formatScore, getCountryFlag, cn
@@ -101,7 +102,7 @@ export default function EventDetailPage() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="text-sm text-text-secondary leading-relaxed">{event.summary_medium}</p>
+                  <TypewriterEffect text={event.summary_medium} className="block text-sm text-text-secondary leading-relaxed" />
                 )}
               </div>
             )}
