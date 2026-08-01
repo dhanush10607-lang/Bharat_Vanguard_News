@@ -31,7 +31,7 @@ from shared.models import Article, Publisher, ArticleStatus, CollectionRun
 from shared.utils.hashing import hash_url
 from shared.utils.slugify import make_slug
 from shared.utils.date_utils import parse_date, utc_now
-from shared.utils.text_utils import clean_text, truncate
+from shared.utils.text_utils import clean_text, truncate, remove_html_tags
 from services.collector.feed_config import PUBLISHERS, PublisherConfig, FeedSource
 
 logger = logging.getLogger("collector.rss")
@@ -130,9 +130,9 @@ class RSSCollector:
         # Get description/summary
         description = ""
         if "summary" in entry:
-            description = clean_text(entry.summary)
+            description = clean_text(remove_html_tags(entry.summary))
         elif "description" in entry:
-            description = clean_text(entry.description)
+            description = clean_text(remove_html_tags(entry.description))
 
         # Truncate description to avoid storing huge raw HTML snippets
         description = truncate(description, max_length=500)

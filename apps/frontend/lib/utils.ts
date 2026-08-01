@@ -20,6 +20,11 @@ export function formatRelative(dateStr?: string | null): string {
   }
 }
 
+export function stripHtml(html: string | null | undefined): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>?/gm, '').trim();
+}
+
 /** Format a date string as "Jul 31, 2026" */
 export function formatDate(dateStr?: string | null): string {
   if (!dateStr) return '';

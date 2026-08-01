@@ -6,7 +6,7 @@ import { Clock, ExternalLink, User, Globe, ArrowLeft } from 'lucide-react';
 import { articlesApi } from '@/lib/api';
 import { TrustScore } from '@/components/news/TrustScore';
 import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
-import { getCategoryBadgeClass, formatDate, formatRelative, getCountryFlag } from '@/lib/utils';
+import { getCategoryBadgeClass, formatDate, formatRelative, getCountryFlag, stripHtml } from '@/lib/utils';
 
 interface Props {
   params: { slug: string };
@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: article.description || article.summary_short,
       openGraph: {
         title: article.title,
-        description: article.description || '',
+        description: stripHtml(article.description || ''),
         images: article.image_url ? [{ url: article.image_url }] : [],
         type: 'article',
       },
@@ -96,7 +96,7 @@ export default async function ArticlePage({ params }: Props) {
             {/* Description */}
             {article.description && (
               <p className="text-xl text-text-secondary leading-relaxed mb-8 border-l-4 border-primary pl-5">
-                {article.description}
+                {stripHtml(article.description)}
               </p>
             )}
 
@@ -179,12 +179,12 @@ export default async function ArticlePage({ params }: Props) {
             {/* Full content */}
             <div className="article-body mb-12 text-lg sm:text-xl text-text-primary leading-loose space-y-6 font-serif">
               {article.content ? (
-                article.content.split('\n\n').map((paragraph, i) => (
+                stripHtml(article.content).split('\n\n').map((paragraph, i) => (
                   <p key={i}>{paragraph}</p>
                 ))
               ) : (
                 <>
-                  <p>{article.description}</p>
+                  <p>{stripHtml(article.description)}</p>
                   <p className="text-text-muted text-base mt-6 italic">
                     Full article content is fetched after the parser processes this article.
                   </p>
