@@ -3,7 +3,7 @@ import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { QueryProvider } from '@/components/providers/QueryProvider';
-import { ThemeProvider } from 'next-themes';
+import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/next';
 
