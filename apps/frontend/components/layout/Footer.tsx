@@ -6,7 +6,8 @@ const FOOTER_LINKS = {
     { href: '/',           label: 'Home' },
     { href: '/search',     label: 'Search' },
     { href: '/analytics',  label: 'Analytics' },
-    { href: '/events',     label: 'Events' },
+    { href: '/events',     label: 'Timeline' },
+    { href: '/magazine',   label: 'Magazine' },
   ],
   Categories: [
     { href: '/categories/world',       label: 'World' },

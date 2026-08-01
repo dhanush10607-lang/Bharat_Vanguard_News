@@ -62,7 +62,17 @@ app.add_middleware(
 # ============================================================
 #  ROUTERS
 # ============================================================
-from apps.api.routers import articles, events, publishers, entities, search, analytics, users, oauth  # noqa: E402
+from apps.api.routers import (
+    articles,
+    events,
+    publishers,
+    entities,
+    analytics,
+    search,
+    oauth,
+    users,
+    magazines
+)
 
 app.include_router(articles.router,    prefix="/api/v1/articles",    tags=["Articles"])
 app.include_router(events.router,      prefix="/api/v1/events",      tags=["Events"])
@@ -72,6 +82,7 @@ app.include_router(search.router,      prefix="/api/v1/search",      tags=["Sear
 app.include_router(analytics.router,   prefix="/api/v1/analytics",   tags=["Analytics"])
 app.include_router(users.router,       prefix="/api/v1/users",       tags=["Users"])
 app.include_router(oauth.router,       prefix="/api/v1/auth",        tags=["Auth / OAuth"])
+app.include_router(magazines.router,   prefix="/api/v1/magazines",   tags=["Magazines"])
 
 
 # ============================================================

@@ -10,6 +10,7 @@ from shared.models.ai_summaries import AISummary
 from shared.models.trust_signals import TrustSignal
 from shared.models.embeddings import ArticleEmbedding
 from shared.models.users import User, UserBookmark, UserHistory, UserRole, SystemLog, CollectionRun
+from shared.models.magazines import Magazine
 
 __all__ = [
     "Publisher",
@@ -21,4 +22,5 @@ __all__ = [
     "ArticleEmbedding",
     "User", "UserBookmark", "UserHistory", "UserRole",
     "SystemLog", "CollectionRun",
+    "Magazine",
 ]
