@@ -1,9 +1,4 @@
 {
-  "buildCommand": "cd apps/frontend && npm install && npm run build",
-  "outputDirectory": "apps/frontend/.next",
-  "installCommand": "cd apps/frontend && npm install",
-  "devCommand": "cd apps/frontend && npm run dev",
-
   "headers": [
     {
       "source": "/api/(.*)",
