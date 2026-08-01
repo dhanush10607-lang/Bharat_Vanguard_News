@@ -171,7 +171,7 @@ export default async function ArticlePage({ params }: Props) {
                     ))}
                   </ul>
                 ) : (
-                  <TypewriterEffect text={article.summary_medium} className="block text-base sm:text-lg text-text-secondary leading-relaxed" />
+                  <TypewriterEffect text={article.summary_medium || ""} className="block text-base sm:text-lg text-text-secondary leading-relaxed" />
                 )}
               </div>
             )}

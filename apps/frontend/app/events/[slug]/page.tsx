@@ -102,7 +102,7 @@ export default function EventDetailPage() {
                     ))}
                   </ul>
                 ) : (
-                  <TypewriterEffect text={event.summary_medium} className="block text-sm text-text-secondary leading-relaxed" />
+                  <TypewriterEffect text={event.summary_medium || ""} className="block text-sm text-text-secondary leading-relaxed" />
                 )}
               </div>
             )}
