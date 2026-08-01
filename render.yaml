@@ -43,7 +43,7 @@ services:
     rootDir: .
     buildCommand: pip install -r requirements-nlp.txt && python -m spacy download en_core_web_sm
     schedule: "*/30 * * * *"    # Every 30 minutes
-    command: python services/nlp/nlp_worker.py
+    startCommand: python services/nlp/nlp_worker.py
 
     envVars:
       - key: DATABASE_URL
@@ -64,7 +64,7 @@ services:
     rootDir: .
     buildCommand: pip install -r requirements.txt
     schedule: "*/15 * * * *"    # Every 15 minutes
-    command: python services/collector/rss_collector.py
+    startCommand: python services/collector/rss_collector.py
 
     envVars:
       - key: DATABASE_URL
@@ -85,7 +85,7 @@ services:
     rootDir: .
     buildCommand: pip install -r requirements.txt
     schedule: "0 */6 * * *"     # Every 6 hours
-    command: python services/collector/guardian_collector.py
+    startCommand: python services/collector/guardian_collector.py
 
     envVars:
       - key: DATABASE_URL
