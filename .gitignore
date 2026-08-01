@@ -54,7 +54,7 @@ yarn-error.log*
 # ── HuggingFace / ML Models (too large for git, ~GBs) ─────────
 # Models are downloaded automatically on first run via the NLP worker
 ml/models/
-models/
+/models/
 *.bin
 *.pt
 *.pth
