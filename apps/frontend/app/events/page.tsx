@@ -68,7 +68,7 @@ export default function EventsPage() {
                     <div className="flex flex-wrap items-center gap-3 mt-3">
                       <span className="flex items-center gap-1 text-xs text-text-muted">
                         <Users size={11} />
-                        {event.article_count} source{event.article_count !== 1 ? 's' : ''}
+                        {event.article_count ?? 0} source{(event.article_count ?? 0) !== 1 ? 's' : ''}
                       </span>
                       {event.first_seen && (
                         <span className="flex items-center gap-1 text-xs text-text-muted">

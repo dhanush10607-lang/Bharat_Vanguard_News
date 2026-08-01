@@ -59,7 +59,7 @@ export default function EventDetailPage() {
               )}
               <span className="flex items-center gap-1.5 text-xs text-text-muted">
                 <Users size={12} />
-                {event.article_count} sources covering this story
+                {event.article_count ?? 0} sources covering this story
               </span>
             </div>
 
@@ -87,7 +87,7 @@ export default function EventDetailPage() {
                     <span className="text-xs">✦</span>
                   </div>
                   <span className="text-xs font-semibold text-primary-light uppercase tracking-wide">
-                    AI Summary — {event.article_count} sources combined
+                    AI Summary — {event.article_count ?? 0} sources combined
                   </span>
                 </div>
 
@@ -110,7 +110,7 @@ export default function EventDetailPage() {
             <div>
               <h2 className="text-base font-semibold text-text-primary mb-4 flex items-center gap-2">
                 <Globe size={16} className="text-primary" />
-                Coverage from {event.article_count} publisher{event.article_count !== 1 ? 's' : ''}
+                Coverage from {event.article_count ?? 0} publisher{(event.article_count ?? 0) !== 1 ? 's' : ''}
               </h2>
 
               <div className="space-y-3">
@@ -186,11 +186,11 @@ export default function EventDetailPage() {
             )}
 
             {/* Keywords */}
-            {event.keywords?.length > 0 && (
+            {(event.keywords?.length ?? 0) > 0 && (
               <div className="card p-5">
                 <h3 className="text-sm font-semibold text-text-primary mb-3">Related Topics</h3>
                 <div className="flex flex-wrap gap-2">
-                  {event.keywords.map((kw: string) => (
+                  {event.keywords?.map((kw: string) => (
                     <Link
                       key={kw}
                       href={`/search?q=${encodeURIComponent(kw)}`}
