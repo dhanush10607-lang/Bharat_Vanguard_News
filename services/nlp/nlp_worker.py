@@ -110,9 +110,14 @@ class NLPWorker:
 
         # 6. Entity Extraction
         entities = self.entity_extractor.extract_entities(full_text)
-
+        
+        seen_slugs = set()
         for ent_data in entities:
             slug = make_slug(f"{ent_data['type']}-{ent_data['name']}")
+            
+            if slug in seen_slugs:
+                continue
+            seen_slugs.add(slug)
 
             ent_result = await db.execute(
                 select(Entity).where(Entity.slug == slug)
@@ -120,21 +125,38 @@ class NLPWorker:
             entity = ent_result.scalar_one_or_none()
 
             if not entity:
-                entity = Entity(
+                from sqlalchemy.dialects.postgresql import insert as pg_insert
+                # Use UPSERT to avoid concurrency IntegrityError
+                stmt = pg_insert(Entity).values(
                     name=ent_data["name"],
                     slug=slug,
                     type=ent_data["type"]
-                )
-                db.add(entity)
-                await db.flush()  # get ID
+                ).on_conflict_do_nothing(index_elements=['slug']).returning(Entity.entity_id)
+                
+                res = await db.execute(stmt)
+                entity_id = res.scalar_one_or_none()
+                
+                if not entity_id:
+                    # Concurrently inserted, fetch it
+                    ent_result = await db.execute(select(Entity.entity_id).where(Entity.slug == slug))
+                    entity_id = ent_result.scalar_one()
+            else:
+                entity_id = entity.entity_id
 
             article_entity = ArticleEntity(
                 article_id=article.article_id,
-                entity_id=entity.entity_id,
+                entity_id=entity_id,
                 mention_count=ent_data["count"]
             )
             db.add(article_entity)
-            entity.article_count += 1
+            
+            if entity:
+                entity.article_count += 1
+            else:
+                # Update article_count directly
+                await db.execute(
+                    Entity.__table__.update().where(Entity.entity_id == entity_id).values(article_count=Entity.article_count + 1)
+                )
 
         # 7. Summarization
         summary_exists = await db.execute(
