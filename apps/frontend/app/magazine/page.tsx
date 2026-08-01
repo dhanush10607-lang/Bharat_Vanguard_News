@@ -19,9 +19,21 @@ const MOCK_MAGAZINES = [
   }
 ];
 
+import { magazinesApi } from '@/lib/api';
+
 export default async function MagazinePage() {
-  // In the future, fetch from magazinesApi.list() here once the backend script has run
-  const magazines = MOCK_MAGAZINES; 
+  let magazines = [];
+  try {
+    const res = await magazinesApi.list();
+    if (res && res.items && res.items.length > 0) {
+      magazines = res.items;
+    } else {
+      magazines = MOCK_MAGAZINES; // Fallback if no real magazines generated yet
+    }
+  } catch (err) {
+    console.error("Failed to fetch magazines:", err);
+    magazines = MOCK_MAGAZINES;
+  } 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-24">
