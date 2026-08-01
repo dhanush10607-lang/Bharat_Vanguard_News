@@ -309,7 +309,7 @@ export const analyticsApi = {
 // ============================================================
 
 export const magazinesApi = {
-  list: () => request<any[]>('/api/v1/magazines'),
+  list: () => request<{ items: any[] }>('/api/v1/magazines'),
 };
 
 // ============================================================
