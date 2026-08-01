@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://bharat-vanguard-news.vercel.app'),
@@ -38,9 +39,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased min-h-screen flex flex-col font-sans transition-colors duration-300">
@@ -56,6 +57,7 @@ export default function RootLayout({
             <Toaster position="bottom-right" theme="system" />
           </QueryProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
