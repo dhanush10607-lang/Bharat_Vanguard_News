@@ -179,8 +179,8 @@ export default function EventDetailPage() {
               <TrustScore
                 data={{
                   confidence_score: event.confidence_score,
-                  independent_sources: event.article_count,
-                  cross_confirmation: event.article_count > 1,
+                  independent_sources: event.article_count || 0,
+                  cross_confirmation: (event.article_count || 0) > 1,
                 }}
               />
             )}
