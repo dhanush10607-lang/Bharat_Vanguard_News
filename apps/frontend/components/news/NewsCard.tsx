@@ -38,6 +38,7 @@ export function NewsCard({ article, index = 0, showPublisher = true, compact = f
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover transition-transform duration-500 group-hover:scale-105"
+              unoptimized={true}
               onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
             />
             {/* Category badge overlay */}
@@ -137,6 +138,7 @@ export function HeroCard({ article }: { article: Article }) {
               sizes="100vw"
               className="object-cover opacity-60 transition-all duration-700 group-hover:opacity-70 group-hover:scale-105"
               priority
+              unoptimized={true}
             />
           )}
           {/* Gradient overlay */}

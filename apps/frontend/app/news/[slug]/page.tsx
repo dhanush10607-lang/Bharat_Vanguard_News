@@ -143,6 +143,7 @@ export default async function ArticlePage({ params }: Props) {
                   sizes="(max-width: 1024px) 100vw, 66vw"
                   className="object-cover"
                   priority
+                  unoptimized={true}
                 />
               </div>
             )}
