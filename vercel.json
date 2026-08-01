@@ -3,9 +3,7 @@
   "outputDirectory": "apps/frontend/.next",
   "installCommand": "cd apps/frontend && npm install",
   "devCommand": "cd apps/frontend && npm run dev",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "@api_url"
-  },
+
   "headers": [
     {
       "source": "/api/(.*)",
