@@ -21,6 +21,8 @@ const MOCK_MAGAZINES = [
 
 import { magazinesApi } from '@/lib/api';
 
+export const dynamic = 'force-dynamic';
+
 export default async function MagazinePage() {
   let magazines = [];
   try {
