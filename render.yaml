@@ -1,0 +1,96 @@
+# ============================================================
+#  Bharat Vanguard News (BVN) — Render Deployment Config (render.yaml)
+#  Deploys the FastAPI backend to Render's free tier.
+#  Docs: https://render.com/docs/blueprint-spec
+# ============================================================
+
+services:
+  # ── FastAPI API Server ──────────────────────────────────────
+  - type: web
+    name: bvn-api
+    runtime: python
+    region: oregon
+    plan: free               # Free tier: 512MB RAM, 0.1 CPU, sleeps after 15min
+    rootDir: .
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn apps.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+
+    envVars:
+      - key: DATABASE_URL
+        sync: false          # Set in Render Dashboard → Environment
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true  # Render auto-generates a secure value
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: ALLOWED_ORIGINS
+        sync: false          # Set to your Vercel domain: https://bharatvanguard.news
+
+  # ── NLP Worker (Cron Job) ────────────────────────────────────
+  - type: cron
+    name: bvn-nlp-worker
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: .
+    buildCommand: pip install -r requirements-nlp.txt && python -m spacy download en_core_web_sm
+    schedule: "*/30 * * * *"    # Every 30 minutes
+    command: python services/nlp/nlp_worker.py
+
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+
+  # ── RSS Collector (Cron Job) ─────────────────────────────────
+  - type: cron
+    name: bvn-rss-collector
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: .
+    buildCommand: pip install -r requirements.txt
+    schedule: "*/15 * * * *"    # Every 15 minutes
+    command: python services/collector/rss_collector.py
+
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+
+  # ── Guardian Collector (Daily) ───────────────────────────────
+  - type: cron
+    name: bvn-guardian-collector
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: .
+    buildCommand: pip install -r requirements.txt
+    schedule: "0 */6 * * *"     # Every 6 hours
+    command: python services/collector/guardian_collector.py
+
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: GUARDIAN_API_KEY
+        sync: false
+      - key: ENVIRONMENT
+        value: production
