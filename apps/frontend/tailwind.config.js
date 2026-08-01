@@ -78,6 +78,7 @@ module.exports = {
         'pulse-slow':    'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'shimmer':       'shimmer 2s infinite linear',
         'spin-slow':     'spin 3s linear infinite',
+        'marquee':       'marquee 30s linear infinite',
       },
 
       keyframes: {
@@ -96,6 +97,10 @@ module.exports = {
         shimmer: {
           '0%':   { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
       },
 

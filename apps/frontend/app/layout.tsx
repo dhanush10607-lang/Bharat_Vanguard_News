@@ -3,10 +3,11 @@ import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { QueryProvider } from '@/components/providers/QueryProvider';
+import { ThemeProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://bharatvanguard.news'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://bharat-vanguard-news.vercel.app'),
   title: {
     default: 'Bharat Vanguard News (BVN) — AI-Powered News Platform',
     template: '%s | BVN',
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://bharatvanguard.news',
+    url: 'https://bharat-vanguard-news.vercel.app',
     siteName: 'Bharat Vanguard News (BVN)',
     title: 'Bharat Vanguard News (BVN) — AI-Powered News Platform',
     description: 'AI-powered news intelligence with transparent trust scoring.',
@@ -26,7 +27,11 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Bharat Vanguard News (BVN)',
-    description: 'India\'s AI-powered news intelligence platform.',
+    description: 'AI-powered news intelligence platform.',
+    images: ['/og-image.png'],
+  },
+  verification: {
+    google: 'google18ad3ba05cc7db59',
   },
   robots: { index: true, follow: true },
 };
@@ -38,30 +43,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-background text-text-primary antialiased">
-        <QueryProvider>
-          {/* Background ambient glow */}
-          <div className="fixed inset-0 bg-hero-glow pointer-events-none z-0" aria-hidden />
-
-          <div className="relative z-10 flex flex-col min-h-screen">
+      <body className="antialiased min-h-screen flex flex-col font-sans transition-colors duration-300">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <QueryProvider>
             <Navbar />
-            <main className="flex-1 w-full">
+            <main className="flex-1 w-full relative pt-16">
+              {/* Global gradient background effect */}
+              <div className="absolute top-0 inset-x-0 h-96 bg-hero-glow -z-10 opacity-60 dark:opacity-40" />
               {children}
             </main>
             <Footer />
-          </div>
-
-          <Toaster
-            position="bottom-right"
-            toastOptions={{
-              style: {
-                background: '#0F1629',
-                border: '1px solid #1E2A45',
-                color: '#F0F4FF',
-              },
-            }}
-          />
-        </QueryProvider>
+            <Toaster position="bottom-right" theme="system" />
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

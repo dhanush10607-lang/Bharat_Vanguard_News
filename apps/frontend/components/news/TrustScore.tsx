@@ -1,7 +1,8 @@
 'use client';
-import { Shield, CheckCircle, AlertCircle, Clock, Users, Star, RefreshCw } from 'lucide-react';
+import { Shield, CheckCircle, AlertCircle, Clock, Users, Star, RefreshCw, Info } from 'lucide-react';
 import { cn, getTrustClass, getTrustLabel, formatScore, formatDateTime } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface TrustSignalData {
   confidence_score?: number | null;
@@ -47,7 +48,12 @@ export function TrustScore({ data, compact = false }: TrustScoreProps) {
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-sm font-semibold text-text-primary mb-0.5">Evidence Strength</h3>
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <h3 className="text-sm font-semibold text-text-primary">Evidence Strength</h3>
+            <Link href="/methodology" className="text-text-muted hover:text-primary transition-colors" title="View Methodology">
+              <Info size={14} />
+            </Link>
+          </div>
           <p className="text-2xs text-text-muted">
             Based on verifiable signals — not a fact-check verdict
           </p>

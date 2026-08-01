@@ -17,9 +17,15 @@ const FOOTER_LINKS = {
     { href: '/categories/india',       label: 'India' },
   ],
   Company: [
-    { href: '/about',      label: 'About' },
-    { href: '/api',        label: 'Public API' },
-    { href: '/publishers', label: 'Publishers' },
+    { href: '/about',      label: 'About Us' },
+    { href: '/methodology',label: 'Methodology' },
+    { href: '/contact',    label: 'Contact' },
+  ],
+  Legal: [
+    { href: '/editorial-policy',   label: 'Editorial Policy' },
+    { href: '/fact-check-policy',  label: 'Fact-Check Policy' },
+    { href: '/privacy',            label: 'Privacy Policy' },
+    { href: '/terms',              label: 'Terms of Service' },
   ],
 };
 
