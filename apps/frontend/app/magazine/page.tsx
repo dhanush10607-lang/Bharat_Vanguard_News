@@ -23,8 +23,18 @@ import { magazinesApi } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
+type MagazineItem = {
+  magazine_id: string;
+  title: string;
+  month: number;
+  year: number;
+  summary: string;
+  pdf_url: string;
+  cover_image_url: string | null;
+};
+
 export default async function MagazinePage() {
-  let magazines = [];
+  let magazines: MagazineItem[] = [];
   try {
     const res = await magazinesApi.list();
     if (res && res.items && res.items.length > 0) {
