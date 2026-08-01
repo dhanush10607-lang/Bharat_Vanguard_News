@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { Search, Filter, X, SlidersHorizontal } from 'lucide-react';
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 const CATEGORIES = ['', 'world', 'technology', 'ai', 'business', 'science', 'health', 'india', 'sports'];
 const COUNTRIES   = ['', 'India', 'United States', 'United Kingdom', 'Global'];
 
-export default function SearchPage() {
+function SearchPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -197,5 +197,20 @@ export default function SearchPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="pt-24 pb-16 min-h-screen">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="skeleton h-8 w-48 rounded mb-6" />
+          <div className="skeleton h-12 w-full rounded mb-4" />
+        </div>
+      </div>
+    }>
+      <SearchPageContent />
+    </Suspense>
   );
 }
