@@ -5,6 +5,7 @@ Uses Pydantic BaseSettings for type-safe, validated configuration.
 """
 from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import model_validator
 
 
 class Settings(BaseSettings):
@@ -83,6 +84,15 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.app_env == "production"
+
+    @model_validator(mode="after")
+    def populate_database_url_sync(self) -> "Settings":
+        if self.database_url and not self.database_url_sync:
+            # Convert asyncpg URL to synchronous URL for Alembic
+            self.database_url_sync = self.database_url.replace("+asyncpg", "")
+            if self.database_url_sync.startswith("postgres://"):
+                self.database_url_sync = self.database_url_sync.replace("postgres://", "postgresql://", 1)
+        return self
 
 
 @lru_cache
