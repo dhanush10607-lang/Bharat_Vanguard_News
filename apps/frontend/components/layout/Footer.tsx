@@ -40,14 +40,8 @@ export function Footer() {
 
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4 w-fit group">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/20 border border-primary/30">
-                <Zap size={16} className="text-primary" />
-              </div>
-              <span className="font-bold text-lg">
-                <span className="text-gradient-blue">BVN</span>
-                <span className="text-text-muted font-normal"> Bharat Vanguard</span>
-              </span>
+            <Link href="/" className="flex items-center mb-4 w-fit group">
+              <img src="/BVNlogo.svg" alt="Bharat Vanguard News" className="h-8 w-auto grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all" />
             </Link>
             <p className="text-sm text-text-muted max-w-xs leading-relaxed mb-4">
               AI-powered news intelligence platform. Transparent, searchable, and sourced.

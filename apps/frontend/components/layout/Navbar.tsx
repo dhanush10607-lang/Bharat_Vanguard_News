@@ -61,13 +61,7 @@ export function Navbar() {
 
           {/* ── Logo ── */}
           <Link href="/" className="flex items-center gap-2 group" id="nav-logo">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/20 border border-primary/30 group-hover:bg-primary/30 transition-all">
-              <Zap size={16} className="text-primary" />
-            </div>
-            <span className="font-bold text-lg tracking-tight">
-              <span className="text-gradient-blue">BVN</span>
-              <span className="text-text-muted font-normal"> Bharat Vanguard</span>
-            </span>
+            <img src="/BVNlogo.svg" alt="Bharat Vanguard News" className="h-8 w-auto" />
           </Link>
 
           {/* ── Desktop Nav ── */}
