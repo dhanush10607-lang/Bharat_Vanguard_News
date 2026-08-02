@@ -10,11 +10,22 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** 
+ * Safely parse ISO string, assuming UTC if no timezone is provided. 
+ * This ensures backend naive datetimes are correctly converted to the user's local timezone.
+ */
+function safeParseISO(dateStr: string): Date {
+  if (!dateStr.endsWith('Z') && !dateStr.includes('+') && !dateStr.match(/-\d{2}:\d{2}$/)) {
+    return parseISO(`${dateStr}Z`);
+  }
+  return parseISO(dateStr);
+}
+
 /** Format a date string as relative ("2 hours ago") */
 export function formatRelative(dateStr?: string | null): string {
   if (!dateStr) return 'Unknown date';
   try {
-    return formatDistanceToNow(parseISO(dateStr), { addSuffix: true });
+    return formatDistanceToNow(safeParseISO(dateStr), { addSuffix: true });
   } catch {
     return dateStr;
   }
@@ -29,7 +40,7 @@ export function stripHtml(html: string | null | undefined): string {
 export function formatDate(dateStr?: string | null): string {
   if (!dateStr) return '';
   try {
-    return format(parseISO(dateStr), 'MMM d, yyyy');
+    return format(safeParseISO(dateStr), 'MMM d, yyyy');
   } catch {
     return dateStr;
   }
@@ -39,7 +50,7 @@ export function formatDate(dateStr?: string | null): string {
 export function formatDateTime(dateStr?: string | null): string {
   if (!dateStr) return '';
   try {
-    return format(parseISO(dateStr), "MMM d, yyyy 'at' h:mm a");
+    return format(safeParseISO(dateStr), "MMM d, yyyy 'at' h:mm a");
   } catch {
     return dateStr;
   }
