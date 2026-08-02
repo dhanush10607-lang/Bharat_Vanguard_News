@@ -55,7 +55,7 @@ async def main():
             if not summary or not summary.summary_medium:
                 continue
                 
-            script_parts.append(f"Story number {idx}.")
+            script_parts.append(f"News Headline {idx}.")
             script_parts.append(article.title + ".")
             script_parts.append(summary.summary_medium)
             
