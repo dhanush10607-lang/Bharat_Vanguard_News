@@ -25,7 +25,7 @@ from sqlalchemy.orm import selectinload
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from shared.database import AsyncSessionLocal
-from shared.models import Article, ArticleStatus, SentimentLabel, ArticleEmbedding, Entity, ArticleEntity, AISummary
+from shared.models import Article, ArticleStatus, ArticleEmbedding, Entity, ArticleEntity, AISummary
 from shared.utils.slugify import make_slug
 
 # Import NLP services
@@ -85,10 +85,7 @@ class NLPWorker:
         # 3. Sentiment Analysis
         if not article.sentiment:
             sentiment_result = self.sentiment_analyzer.analyze(full_text)
-            try:
-                article.sentiment = SentimentLabel(sentiment_result["sentiment"])
-            except ValueError:
-                article.sentiment = SentimentLabel.NEUTRAL
+            article.sentiment = sentiment_result["sentiment"]
 
         # 4. Topic Classification
         if not article.category:

@@ -14,7 +14,7 @@ from shared.models.magazines import Magazine
 
 __all__ = [
     "Publisher",
-    "Article", "ArticleStatus", "SentimentLabel",
+    "Article", "ArticleStatus",
     "Event", "EventArticle", "EventSentiment",
     "Entity", "ArticleEntity", "EntityType",
     "AISummary",
