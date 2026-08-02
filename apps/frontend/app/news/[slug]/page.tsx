@@ -101,8 +101,8 @@ export default async function ArticlePage({ params }: Props) {
               {article.title}
             </h1>
 
-            {/* Description */}
-            {article.description && (
+            {/* Description - Only show if it's different from title */}
+            {article.description && stripHtml(article.description).trim().toLowerCase() !== article.title.trim().toLowerCase() && (
               <p className="text-xl text-text-secondary leading-relaxed mb-8 border-l-4 border-primary pl-5">
                 {stripHtml(article.description)}
               </p>
@@ -157,8 +157,8 @@ export default async function ArticlePage({ params }: Props) {
               </div>
             )}
 
-            {/* AI Summary (if available) */}
-            {article.summary_medium && (
+            {/* AI Summary (if available and different from title) */}
+            {article.summary_medium && article.summary_medium.trim().toLowerCase() !== article.title.trim().toLowerCase() && (
               <div className="mb-10 p-6 sm:p-8 bg-primary/5 border border-primary/20 rounded-3xl shadow-sm">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
@@ -184,18 +184,23 @@ export default async function ArticlePage({ params }: Props) {
               </div>
             )}
 
-            {/* Full content */}
-            <div className="article-body mb-12 text-lg sm:text-xl text-text-primary leading-loose space-y-6 font-serif">
-              {article.content ? (
-                stripHtml(article.content).split('\n\n').map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))
-              ) : (
-                <>
-                  <p>{stripHtml(article.description)}</p>
-                </>
-              )}
-            </div>
+            {/* Full content - Only show if different from description and title */}
+            {((article.content && stripHtml(article.content).trim().toLowerCase() !== article.title.trim().toLowerCase() && 
+               (!article.description || stripHtml(article.content).trim().toLowerCase() !== stripHtml(article.description).trim().toLowerCase())) || 
+               (article.description && stripHtml(article.description).trim().toLowerCase() !== article.title.trim().toLowerCase() && !article.content)) && (
+              <div className="article-body mb-12 text-lg sm:text-xl text-text-primary leading-loose space-y-6 font-serif">
+                {article.content && stripHtml(article.content).trim().toLowerCase() !== article.title.trim().toLowerCase() && 
+                 (!article.description || stripHtml(article.content).trim().toLowerCase() !== stripHtml(article.description).trim().toLowerCase()) ? (
+                  stripHtml(article.content).split('\n\n').map((paragraph, i) => (
+                    <p key={i}>{paragraph}</p>
+                  ))
+                ) : (
+                  <>
+                    <p>{stripHtml(article.description || '')}</p>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Keywords */}
             {article.keywords && article.keywords.length > 0 && (
