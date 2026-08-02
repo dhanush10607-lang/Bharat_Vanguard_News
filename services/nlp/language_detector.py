@@ -34,7 +34,7 @@ def detect_languages_with_confidence(text: str) -> list[dict]:
         
     try:
         langs = detect_langs(text)
-        return [{"lang": l.lang, "score": l.prob} for l in langs]
+        return [{"lang": lang_obj.lang, "score": lang_obj.prob} for lang_obj in langs]
     except LangDetectException as e:
         logger.warning(f"Language detection failed: {e}")
         return []
