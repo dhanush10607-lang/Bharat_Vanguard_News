@@ -66,6 +66,60 @@ PUBLISHERS = [
         "country": "United States",
         "reputation_score": 0.90,
         "is_active": True,
+    },
+    {
+        "name": "Al Jazeera",
+        "slug": "al-jazeera",
+        "homepage_url": "https://www.aljazeera.com",
+        "feed_url": "https://www.aljazeera.com/xml/rss/all.xml",
+        "country": "Qatar",
+        "reputation_score": 0.85,
+        "is_active": True,
+    },
+    {
+        "name": "The New York Times",
+        "slug": "nyt",
+        "homepage_url": "https://www.nytimes.com",
+        "feed_url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+        "country": "United States",
+        "reputation_score": 0.90,
+        "is_active": True,
+    },
+    {
+        "name": "CNN",
+        "slug": "cnn",
+        "homepage_url": "https://edition.cnn.com",
+        "feed_url": "http://rss.cnn.com/rss/edition_world.rss",
+        "country": "United States",
+        "reputation_score": 0.80,
+        "is_active": True,
+    },
+    {
+        "name": "Times of India",
+        "slug": "toi",
+        "homepage_url": "https://timesofindia.indiatimes.com",
+        "feed_url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms",
+        "country": "India",
+        "reputation_score": 0.80,
+        "is_active": True,
+    },
+    {
+        "name": "TechCrunch",
+        "slug": "techcrunch",
+        "homepage_url": "https://techcrunch.com",
+        "feed_url": "https://techcrunch.com/feed/",
+        "country": "United States",
+        "reputation_score": 0.85,
+        "is_active": True,
+    },
+    {
+        "name": "The Verge",
+        "slug": "the-verge",
+        "homepage_url": "https://www.theverge.com",
+        "feed_url": "https://www.theverge.com/rss/index.xml",
+        "country": "United States",
+        "reputation_score": 0.85,
+        "is_active": True,
     }
 ]
 
@@ -80,7 +134,16 @@ async def seed_publishers():
             
             if not existing:
                 print(f"Adding publisher: {pub_data['name']}")
-                pub = Publisher(**pub_data)
+                mapped_data = {
+                    "name": pub_data["name"],
+                    "slug": pub_data["slug"],
+                    "website": pub_data.get("homepage_url"),
+                    "rss_feeds": [{"url": pub_data["feed_url"], "category": "General"}],
+                    "country": pub_data.get("country"),
+                    "reputation_score": pub_data.get("reputation_score", 0.5),
+                    "active": pub_data.get("is_active", True)
+                }
+                pub = Publisher(**mapped_data)
                 db.add(pub)
             else:
                 print(f"Already exists: {pub_data['name']}")
