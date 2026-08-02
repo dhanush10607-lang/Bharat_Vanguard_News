@@ -44,6 +44,7 @@ export interface Article {
   summary_medium?: string;
   summary_bullets?: string[];
   keywords?: string[];
+  likes_count?: number;
 }
 
 export interface Event {
