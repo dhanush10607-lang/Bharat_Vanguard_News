@@ -139,7 +139,7 @@ class GuardianCollector:
 
                         article = Article(
                             title=title[:1000],
-                            slug=make_slug(title),
+                            slug=url_hash[:12],
                             description=description,
                             url=url,
                             url_hash=url_hash,

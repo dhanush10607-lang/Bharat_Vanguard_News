@@ -152,8 +152,8 @@ class RSSCollector:
         author = entry.get("author", "")
 
         url_hash = hash_url(url)
-        # Append short hash to ensure unique slugs even for identical titles (e.g., "Tech Now")
-        slug = f"{make_slug(title)}-{url_hash[:6]}"
+        # Use a short hash for the slug to keep URLs clean and unique
+        slug = url_hash[:12]
 
         return {
             "title": title[:1000],
