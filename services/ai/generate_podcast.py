@@ -6,12 +6,12 @@ from shared.models import Article, AISummary, ArticleStatus
 
 async def main():
     async with AsyncSessionLocal() as db:
-        # Get top 5 most recent processed/published articles
+        # Get top 10 most recent processed/published articles
         stmt = (
             select(Article)
             .where(Article.status.in_([ArticleStatus.PROCESSED, ArticleStatus.PUBLISHED]))
             .order_by(Article.published_time.desc())
-            .limit(5)
+            .limit(10)
         )
         result = await db.execute(stmt)
         articles = result.scalars().all()
