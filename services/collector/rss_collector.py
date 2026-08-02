@@ -150,12 +150,41 @@ class RSSCollector:
         published_str = entry.get("published", "") or entry.get("updated", "")
         published_time = parse_date(published_str) or utc_now()
 
-        # Extract image URL (various RSS formats)
+        # Extract image URL (prioritize high-res)
         image_url = None
+        
+        # 1. Try media_content (sort by width to get largest)
         if "media_content" in entry and entry.media_content:
-            image_url = entry.media_content[0].get("url")
-        elif "media_thumbnail" in entry and entry.media_thumbnail:
+            try:
+                images = sorted(entry.media_content, key=lambda x: int(x.get("width", 0)), reverse=True)
+                image_url = images[0].get("url")
+            except Exception:
+                image_url = entry.media_content[0].get("url")
+                
+        # 2. Try enclosures
+        if not image_url and "links" in entry:
+            for link in entry.links:
+                if link.get("type", "").startswith("image/") and link.get("href"):
+                    image_url = link.href
+                    break
+
+        # 3. Extract from raw HTML BEFORE stripping tags
+        raw_desc = entry.get("summary", "") or entry.get("description", "")
+        if not image_url and raw_desc:
+            import re
+            img_match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', raw_desc, re.IGNORECASE)
+            if img_match:
+                image_url = img_match.group(1)
+
+        # 4. Fallback to thumbnail
+        if not image_url and "media_thumbnail" in entry and entry.media_thumbnail:
             image_url = entry.media_thumbnail[0].get("url")
+            
+        # 5. Automatically upscale Google/Blogger/Medium thumbnails
+        if image_url:
+            import re
+            # Replaces things like =s150-c or =w200 with =s1200 (high-res) for Google-hosted images
+            image_url = re.sub(r'=[swh]\d+(-[a-z]+)*$', '=s1200', image_url)
 
         # Extract author
         author = entry.get("author", "")
