@@ -52,12 +52,13 @@ async def main():
         
         for idx, article in enumerate(articles, 1):
             summary = summaries.get(article.article_id)
-            if not summary or not summary.summary_medium:
-                continue
-                
             script_parts.append(f"News Headline {idx}.")
             script_parts.append(article.title + ".")
-            script_parts.append(summary.summary_medium)
+            
+            if summary and summary.summary_medium:
+                script_parts.append(summary.summary_medium)
+            elif article.description:
+                script_parts.append(article.description)
             
         script_parts.append("That's all for now. Stay informed, and have a great day!")
         
