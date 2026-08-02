@@ -166,18 +166,31 @@ class NLPWorker:
             logger.info(f"Generating summary for article {article.article_id}...")
             summary_result = self.summarizer.summarize_article(full_text)
 
+            # Calculate reading time and keywords
+            word_count = len(full_text.split())
+            reading_time_min = max(1, round(word_count / 200))
+            keywords = [ent["name"] for ent in sorted(entities, key=lambda x: x["count"], reverse=True)[:5]]
+
             ai_summary = AISummary(
                 article_id=article.article_id,
                 summary_short=summary_result["short"],
                 summary_medium=summary_result["medium"],
                 summary_bullets=summary_result["bullets"],
-                language=article.language
+                language=article.language,
+                reading_time_min=reading_time_min,
+                keywords=keywords
             )
             db.add(ai_summary)
 
             # Assign sentiment and category to the article itself
             article.sentiment = summary_result.get("sentiment", "neutral")
             article.category = summary_result.get("category", "General")
+            
+            # Also update the main article stats
+            if not article.reading_time_min:
+                article.reading_time_min = reading_time_min
+            if not article.word_count:
+                article.word_count = word_count
 
         # 8. Cluster into Events
         event = await self.event_manager.cluster_article(db, article, embedding)
