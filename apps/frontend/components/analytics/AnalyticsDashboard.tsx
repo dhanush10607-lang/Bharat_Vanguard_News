@@ -87,8 +87,8 @@ function EntityIcon({ type }: { type: string }) {
 // ============================================================
 
 const SENTIMENT_COLOR: Record<string, string> = {
-  positive: 'bg-emerald/15 text-emerald border-emerald/30',
-  negative: 'bg-rose/15 text-rose border-rose/30',
+  positive: 'bg-green-500/15 text-green-500 border-green-500/30',
+  negative: 'bg-red-500/15 text-red-500 border-red-500/30',
   neutral:  'bg-text-muted/10 text-text-muted border-border',
   mixed:    'bg-amber/15 text-amber border-amber/30',
 };
@@ -177,8 +177,8 @@ export function AnalyticsDashboard() {
                 <div className="flex justify-between text-xs mb-1">
                   <span className={cn(
                     'capitalize font-medium',
-                    item.sentiment === 'positive' ? 'text-emerald' :
-                    item.sentiment === 'negative' ? 'text-rose' :
+                    item.sentiment === 'positive' ? 'text-green-500' :
+                    item.sentiment === 'negative' ? 'text-red-500' :
                     item.sentiment === 'mixed' ? 'text-amber' : 'text-text-muted'
                   )}>
                     {item.sentiment}
@@ -191,8 +191,8 @@ export function AnalyticsDashboard() {
                     animate={{ width: `${item.percentage}%` }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
                     className={cn('h-full rounded-full',
-                      item.sentiment === 'positive' ? 'bg-emerald' :
-                      item.sentiment === 'negative' ? 'bg-rose' :
+                      item.sentiment === 'positive' ? 'bg-green-500' :
+                      item.sentiment === 'negative' ? 'bg-red-500' :
                       item.sentiment === 'mixed' ? 'bg-amber' : 'bg-text-muted/50'
                     )}
                   />
