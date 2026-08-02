@@ -344,4 +344,15 @@ export const authApi = {
       method: 'POST',
       body: JSON.stringify({ access_token }),
     }),
+
+  getBookmarks: () => 
+    request<{ bookmarked_article_ids: string[] }>('/api/v1/users/bookmarks/articles'),
+
+  getBookmarkDetails: () => 
+    request<{ items: any[] }>('/api/v1/users/bookmarks/details'),
+
+  toggleBookmark: (article_id: string) => 
+    request<{ status: string; article_id: string }>(`/api/v1/users/bookmarks/articles/${article_id}`, {
+      method: 'POST',
+    }),
 };

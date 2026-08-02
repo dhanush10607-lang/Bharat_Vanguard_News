@@ -8,6 +8,7 @@ import {
   cn, formatRelative, getCategoryBadgeClass, getTrustClass,
   formatScore, getCountryFlag, truncate
 } from '@/lib/utils';
+import { BookmarkButton } from '@/components/shared/BookmarkButton';
 
 // ============================================================
 //  NEWS CARD — Standard card for grids and feeds
@@ -98,15 +99,20 @@ export function NewsCard({ article, index = 0, showPublisher = true, compact = f
               )}
             </div>
 
-            {/* Trust score */}
-            {article.confidence_score != null && (
-              <div className="flex items-center gap-1 shrink-0">
-                <Shield size={10} className={getTrustClass(article.confidence_score)} />
-                <span className={cn('text-xs font-semibold', getTrustClass(article.confidence_score))}>
-                  {formatScore(article.confidence_score)}
-                </span>
-              </div>
-            )}
+            {/* Trust score & Bookmark */}
+            <div className="flex items-center gap-3 shrink-0">
+              {article.confidence_score != null && (
+                <div className="flex items-center gap-1">
+                  <Shield size={10} className={getTrustClass(article.confidence_score)} />
+                  <span className={cn('text-xs font-semibold', getTrustClass(article.confidence_score))}>
+                    {formatScore(article.confidence_score)}
+                  </span>
+                </div>
+              )}
+              {article.article_id && (
+                <BookmarkButton articleId={article.article_id} size={14} className="p-1.5" />
+              )}
+            </div>
           </div>
         </div>
       </Link>
@@ -190,6 +196,11 @@ export function HeroCard({ article }: { article: Article }) {
                 <span className={cn('text-sm font-semibold', getTrustClass(article.confidence_score))}>
                   {formatScore(article.confidence_score)} confidence
                 </span>
+              </div>
+            )}
+            {article.article_id && (
+              <div className="ml-auto">
+                <BookmarkButton articleId={article.article_id} size={18} className="p-2 bg-surface-2/30 backdrop-blur-sm text-white hover:bg-surface-2/60" />
               </div>
             )}
           </div>

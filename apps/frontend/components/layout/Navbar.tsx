@@ -180,7 +180,7 @@ export function Navbar() {
                       <Link
                         href="/bookmarks"
                         onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
+                        className="flex items-center gap-2 w-full px-4 py-2 text-sm text-text-secondary hover:bg-surface-3 transition-colors"
                       >
                         <Bookmark size={14} /> Bookmarks
                       </Link>

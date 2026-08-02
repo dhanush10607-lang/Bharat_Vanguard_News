@@ -7,6 +7,7 @@ import { articlesApi } from '@/lib/api';
 import { TrustScore } from '@/components/news/TrustScore';
 import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
 import { getCategoryBadgeClass, formatDate, formatRelative, getCountryFlag, stripHtml, getSentimentClass } from '@/lib/utils';
+import { BookmarkButton } from '@/components/shared/BookmarkButton';
 
 interface Props {
   params: { slug: string };
@@ -82,6 +83,11 @@ export default async function ArticlePage({ params }: Props) {
               )}
               {article.reading_time_min && (
                 <span className="text-xs text-text-muted">{article.reading_time_min} min read</span>
+              )}
+              {article.article_id && (
+                <div className="ml-auto">
+                  <BookmarkButton articleId={article.article_id} size={18} />
+                </div>
               )}
             </div>
 

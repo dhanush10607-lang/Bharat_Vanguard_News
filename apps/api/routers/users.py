@@ -14,7 +14,7 @@ import bcrypt
 from jose import JWTError, jwt
 
 from shared.database import get_db
-from shared.models import User, UserRole
+from shared.models import User, UserRole, UserBookmark, Article
 from shared.config import settings
 
 router = APIRouter()
@@ -168,3 +168,72 @@ async def update_preferences(
     """Update user news preferences (categories, countries, etc.)"""
     current_user.preferences = preferences
     return {"message": "Preferences updated", "preferences": preferences}
+
+
+# ============================================================
+#  BOOKMARKS
+# ============================================================
+
+@router.get("/bookmarks/articles")
+async def get_bookmarked_articles(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get all article UUIDs bookmarked by the user."""
+    result = await db.execute(
+        select(UserBookmark.article_id).where(
+            UserBookmark.user_id == current_user.user_id,
+            UserBookmark.article_id.isnot(None)
+        )
+    )
+    article_ids = result.scalars().all()
+    return {"bookmarked_article_ids": [str(aid) for aid in article_ids]}
+
+
+@router.get("/bookmarks/details")
+async def get_bookmarked_articles_details(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get the full article objects for all bookmarks of the user."""
+    # Note: for a large number of bookmarks, this should be paginated
+    result = await db.execute(
+        select(Article)
+        .join(UserBookmark, UserBookmark.article_id == Article.article_id)
+        .where(UserBookmark.user_id == current_user.user_id)
+        .order_by(UserBookmark.created_at.desc())
+        .limit(50)
+    )
+    articles = result.scalars().all()
+    
+    # We must convert to dicts to match what the frontend expects
+    from apps.api.routers.articles import ArticleBrief
+    articles_out = [ArticleBrief.model_validate(a) for a in articles]
+    return {"items": articles_out}
+
+
+@router.post("/bookmarks/articles/{article_id}")
+async def toggle_article_bookmark(
+    article_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Toggle a bookmark for an article."""
+    result = await db.execute(
+        select(UserBookmark).where(
+            UserBookmark.user_id == current_user.user_id,
+            UserBookmark.article_id == article_id
+        )
+    )
+    existing = result.scalar_one_or_none()
+    
+    if existing:
+        await db.delete(existing)
+        return {"status": "removed", "article_id": str(article_id)}
+    else:
+        new_bookmark = UserBookmark(
+            user_id=current_user.user_id,
+            article_id=article_id
+        )
+        db.add(new_bookmark)
+        return {"status": "added", "article_id": str(article_id)}
