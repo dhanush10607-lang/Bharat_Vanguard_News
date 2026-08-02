@@ -74,14 +74,16 @@ async def main():
         output_file = os.path.join(podcast_dir, filename)
         latest_file = os.path.join(podcast_dir, "latest.mp3")
         
-        # Use gTTS (Google Text-to-Speech) which is reliable and free
-        from gtts import gTTS
+        # Use edge-tts (Microsoft Azure Neural TTS) which is highly reliable and free
+        import edge_tts
         
-        print("Generating audio with gTTS...")
-        tts = gTTS(text=full_script, lang='en', tld='com.au')  # Australian accent for a unique professional tone
+        print("Generating audio with edge-tts...")
+        # Natasha is a professional sounding Australian Neural voice
+        voice = "en-AU-NatashaNeural"
+        communicate = edge_tts.Communicate(full_script, voice)
         
-        # Save blocking call in a thread
-        await asyncio.to_thread(tts.save, output_file)
+        # Save directly asynchronously
+        await communicate.save(output_file)
         
         # Copy to latest.mp3 for backward compatibility
         import shutil
