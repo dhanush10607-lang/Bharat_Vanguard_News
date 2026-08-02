@@ -192,7 +192,7 @@ export function Navbar() {
               <Link
                 href="/login"
                 id="nav-login-btn"
-                className="btn-primary text-xs py-1.5"
+                className="btn-primary text-xs py-1 px-4 whitespace-nowrap"
               >
                 Sign in
               </Link>
