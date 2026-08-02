@@ -6,7 +6,7 @@ import { Clock, ExternalLink, User, Globe, ArrowLeft } from 'lucide-react';
 import { articlesApi } from '@/lib/api';
 import { TrustScore } from '@/components/news/TrustScore';
 import { TypewriterEffect } from '@/components/ui/TypewriterEffect';
-import { getCategoryBadgeClass, formatDate, formatRelative, getCountryFlag, stripHtml } from '@/lib/utils';
+import { getCategoryBadgeClass, formatDate, formatRelative, getCountryFlag, stripHtml, getSentimentClass } from '@/lib/utils';
 
 interface Props {
   params: { slug: string };
@@ -239,7 +239,11 @@ export default async function ArticlePage({ params }: Props) {
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-center text-sm">
                     <dt className="text-text-muted">{label}</dt>
-                    <dd className="text-text-primary font-semibold capitalize bg-surface-2 px-2 py-1 rounded-md">{value}</dd>
+                    <dd className={`font-semibold capitalize bg-surface-2 px-2 py-1 rounded-md ${
+                      label === 'Sentiment' ? getSentimentClass(value) : 'text-text-primary'
+                    }`}>
+                      {value}
+                    </dd>
                   </div>
                 ))}
               </dl>
