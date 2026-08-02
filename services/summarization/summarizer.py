@@ -26,7 +26,7 @@ class Summarizer:
         logger.info("Loading Summarization model (facebook/bart-large-cnn)...")
         # device=-1 for CPU
         self.pipeline = pipeline(
-            "text-generation",
+            "summarization",
             model="facebook/bart-large-cnn",
             device=-1
         )
@@ -54,8 +54,15 @@ class Summarizer:
             # Truncate text to fit BART's context window (roughly 1024 tokens ~ 4000 chars)
             safe_text = text[:4000]
             
-            # Generate medium summary (target 130 max length for a good paragraph)
-            result = self.pipeline(safe_text, max_length=150, min_length=40, do_sample=False)
+            # Generate medium summary using beam search for higher quality
+            result = self.pipeline(
+                safe_text, 
+                max_length=150, 
+                min_length=40, 
+                do_sample=False,
+                num_beams=4,
+                length_penalty=2.0
+            )
             
             # Handle output format depending on transformers version
             if "summary_text" in result[0]:
