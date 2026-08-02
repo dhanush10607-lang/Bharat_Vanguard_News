@@ -27,6 +27,7 @@ class PublisherBrief(BaseModel):
     country: Optional[str]
     logo_url: Optional[str]
     reputation_score: Optional[float]
+    is_official: Optional[bool] = False
 
     class Config:
         from_attributes = True
@@ -239,6 +240,7 @@ async def get_article(slug: str, db: AsyncSession = Depends(get_db)):
             country=publisher.country,
             logo_url=publisher.logo_url,
             reputation_score=publisher.reputation_score,
+            is_official=publisher.is_official,
         ),
         confidence_score=trust.confidence_score if trust else None,
         summary_short=ai_summary.summary_short if ai_summary else None,
