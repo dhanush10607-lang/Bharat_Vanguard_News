@@ -175,6 +175,10 @@ class NLPWorker:
             )
             db.add(ai_summary)
 
+            # Assign sentiment and category to the article itself
+            article.sentiment = summary_result.get("sentiment", "neutral")
+            article.category = summary_result.get("category", "General")
+
         # 8. Cluster into Events
         event = await self.event_manager.cluster_article(db, article, embedding)
 

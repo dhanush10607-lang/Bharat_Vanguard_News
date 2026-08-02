@@ -21,11 +21,7 @@ class ArticleStatus(str, enum.Enum):
     FAILED = "failed"         # Processing failed
 
 
-class SentimentLabel(str, enum.Enum):
-    POSITIVE = "positive"
-    NEGATIVE = "negative"
-    NEUTRAL = "neutral"
-    MIXED = "mixed"
+
 
 
 class Article(Base):
@@ -49,7 +45,7 @@ class Article(Base):
     language = Column(String(10), default="en", index=True)
     category = Column(String(100), index=True)
     country = Column(String(100), index=True)
-    sentiment = Column(Enum(SentimentLabel), index=True)
+    sentiment = Column(String(20), index=True)
 
     # Timestamps
     published_time = Column(DateTime(timezone=True), index=True)

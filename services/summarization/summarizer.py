@@ -30,7 +30,20 @@ class Summarizer:
             model="facebook/bart-large-cnn",
             device=-1
         )
-        logger.info("Summarization model loaded.")
+        logger.info("Loading Sentiment model...")
+        self.sentiment_pipeline = pipeline(
+            "sentiment-analysis",
+            model="distilbert-base-uncased-finetuned-sst-2-english",
+            device=-1
+        )
+        logger.info("Loading Classification model...")
+        self.classifier_pipeline = pipeline(
+            "zero-shot-classification",
+            model="valhalla/distilbart-mnli-12-3",
+            device=-1
+        )
+        self.categories = ["Technology", "Artificial Intelligence", "Politics", "Business", "Space", "Science", "Entertainment", "Sports", "World"]
+        logger.info("All NLP models loaded.")
 
     def summarize_article(self, text: str) -> dict:
         """
@@ -83,11 +96,21 @@ class Summarizer:
             
             # Derive bullets (each sentence is a bullet)
             bullets = [s for s in sentences if s.strip()]
+
+            # Sentiment Analysis
+            sentiment_result = self.sentiment_pipeline(safe_text[:512])[0]
+            sentiment_label = sentiment_result['label'].lower()  # 'positive' or 'negative'
+
+            # Zero Shot Classification
+            category_result = self.classifier_pipeline(safe_text[:512], self.categories)
+            top_category = category_result['labels'][0]
             
             return {
                 "short": short_text,
                 "medium": medium_text,
-                "bullets": bullets
+                "bullets": bullets,
+                "sentiment": sentiment_label,
+                "category": top_category
             }
             
         except Exception as e:

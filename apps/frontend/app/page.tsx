@@ -6,6 +6,7 @@ import { TrendingSection } from '@/components/home/TrendingSection';
 import { LatestSection } from '@/components/home/LatestSection';
 import { CategoryNav } from '@/components/home/CategoryNav';
 import { BreakingTicker } from '@/components/home/BreakingTicker';
+import { PodcastPlayer } from '@/components/home/PodcastPlayer';
 import { articlesApi } from '@/lib/api';
 
 export const metadata: Metadata = {
@@ -41,6 +42,11 @@ export default async function HomePage() {
             <Suspense fallback={<div className="skeleton rounded-3xl" style={{ height: 420 }} />}>
               <HeroSection />
             </Suspense>
+          </section>
+
+          {/* Podcast Player */}
+          <section>
+            <PodcastPlayer />
           </section>
 
           {/* Category quick-nav */}
