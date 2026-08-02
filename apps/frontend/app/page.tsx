@@ -28,7 +28,7 @@ export default async function HomePage() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="pt-16 pb-16">
+      <div className="pb-16">
         
         {/* Breaking News Ticker */}
         <Suspense fallback={null}>
