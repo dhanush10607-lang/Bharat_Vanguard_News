@@ -14,10 +14,11 @@ export async function BreakingTicker() {
   if (!articles || articles.length === 0) return null;
 
   return (
-    <div className="w-full bg-red-600 text-white overflow-hidden flex items-center h-10 px-4">
-      <div className="flex items-center gap-2 font-bold uppercase text-xs shrink-0 tracking-widest z-10 bg-red-600 pr-4">
+    <div className="w-full bg-red-600 text-white overflow-hidden flex items-center h-10 px-2 sm:px-4">
+      <div className="flex items-center gap-1.5 sm:gap-2 font-bold uppercase text-[10px] sm:text-xs shrink-0 tracking-widest z-10 bg-red-600 pr-2 sm:pr-4">
         <span className="dot-live bg-white" />
-        Breaking News
+        <span className="hidden sm:inline">Breaking News</span>
+        <span className="sm:hidden">Breaking</span>
       </div>
       
       {/* CSS Marquee */}
