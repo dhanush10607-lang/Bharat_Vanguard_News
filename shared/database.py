@@ -15,6 +15,7 @@ engine = create_async_engine(
     max_overflow=20,
     pool_pre_ping=True,         # Reconnect on stale connections
     pool_recycle=3600,          # Recycle connections every hour
+    connect_args={"timeout": 60, "command_timeout": 60}, # Give cloud DB time to wake up
 )
 
 # Session factory

@@ -144,6 +144,18 @@ class RSSCollector:
         # Truncate description to avoid storing huge raw HTML snippets
         description = truncate(description, max_length=500)
 
+        # Content (Full Article text if available in RSS)
+        content = ""
+        if "content" in entry and entry.content:
+            content_val = entry.content[0].get("value", "")
+            content = clean_text(remove_html_tags(content_val))
+        if not content:
+            content = description  # Fallback if full content isn't in feed
+
+        # Generate content hash for deduplication
+        import hashlib
+        content_hash = hashlib.sha256(content.encode("utf-8")).hexdigest() if content else None
+
         # Parse published date
         published_str = entry.get("published", "") or entry.get("updated", "")
         published_time = parse_date(published_str) or utc_now()
@@ -195,6 +207,9 @@ class RSSCollector:
             "title": title[:1000],
             "slug": slug,
             "description": description,
+            "content": content,
+            "content_hash": content_hash,
+            "is_paywalled": False,
             "url": url[:2000],
             "url_hash": url_hash,
             "image_url": image_url,
