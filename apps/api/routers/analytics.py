@@ -85,7 +85,7 @@ async def get_analytics_summary(db: AsyncSession = Depends(get_db)):
     total_articles = total_result.scalar() or 0
 
     total_pub_result = await db.execute(
-        select(func.count()).select_from(Publisher).where(Publisher.active is True)
+        select(func.count()).select_from(Publisher).where(Publisher.active.is_(True))
     )
     total_publishers = total_pub_result.scalar() or 0
 
