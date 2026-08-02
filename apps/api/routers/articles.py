@@ -63,6 +63,12 @@ class ArticleDetail(ArticleListItem):
     summary_bullets: Optional[list] = None
     keywords: Optional[list] = None
 
+    # Trust Signal metrics
+    independent_sources: Optional[int] = None
+    cross_confirmation: Optional[bool] = None
+    freshness_hours: Optional[float] = None
+    has_correction: Optional[bool] = None
+
 
 class PaginatedArticles(BaseModel):
     items: list[ArticleListItem]
@@ -239,6 +245,10 @@ async def get_article(slug: str, db: AsyncSession = Depends(get_db)):
         summary_medium=ai_summary.summary_medium if ai_summary else None,
         summary_bullets=ai_summary.summary_bullets if ai_summary else None,
         keywords=ai_summary.keywords if ai_summary else None,
+        independent_sources=trust.independent_sources if trust else None,
+        cross_confirmation=trust.cross_confirmation if trust else None,
+        freshness_hours=trust.freshness_hours if trust else None,
+        has_correction=trust.has_correction if trust else None,
     )
 
 

@@ -40,6 +40,11 @@ export interface Article {
   sentiment?: 'positive' | 'negative' | 'neutral' | 'mixed';
   publisher?: Publisher;
   confidence_score?: number;
+  independent_sources?: number;
+  cross_confirmation?: boolean;
+  freshness_hours?: number;
+  has_correction?: boolean;
+  
   summary_short?: string;
   summary_medium?: string;
   summary_bullets?: string[];

@@ -44,6 +44,10 @@ export default async function ArticlePage({ params }: Props) {
     confidence_score: article.confidence_score,
     official_source: article.publisher?.is_official,
     publisher_reputation: article.publisher?.reputation_score,
+    independent_sources: article.independent_sources,
+    cross_confirmation: article.cross_confirmation,
+    freshness_hours: article.freshness_hours,
+    has_correction: article.has_correction,
   };
 
   return (
