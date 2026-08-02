@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { authApi } from '@/lib/api';
-import { getStoredUser } from '@/lib/utils';
+import { getStoredUser, formatCompactNumber } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 
 interface LikeButtonProps {
@@ -103,7 +103,7 @@ export function LikeButton({ articleId, initialLikes = 0, className = '', size =
         className={isLiked ? "fill-current text-rose-500" : ""} 
       />
       {showCount && localLikesCount > 0 && (
-        <span className="text-xs font-semibold">{localLikesCount}</span>
+        <span className="text-xs font-semibold">{formatCompactNumber(localLikesCount)}</span>
       )}
     </motion.button>
   );

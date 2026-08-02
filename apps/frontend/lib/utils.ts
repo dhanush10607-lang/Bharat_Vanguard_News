@@ -65,6 +65,15 @@ export function getTrustClass(score?: number | null): string {
   return 'text-rose';
 }
 
+/** Format number to compact notation (1.2K, 1.5M, etc) */
+export function formatCompactNumber(number: number | undefined | null): string {
+  if (number == null) return '0';
+  return Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  }).format(number);
+}
+
 /** Get label for trust score */
 export function getTrustLabel(score?: number | null): string {
   if (score == null) return 'Unverified';
