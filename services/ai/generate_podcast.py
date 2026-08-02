@@ -26,9 +26,29 @@ async def main():
         summary_result = await db.execute(summary_stmt)
         summaries = {s.article_id: s for s in summary_result.scalars().all()}
 
+        # Determine time of day for greeting
+        import datetime
+        import json
+        import os
+        import glob
+        import time
+
+        now = datetime.datetime.now()
+        hour = now.hour
+        
+        if hour < 12:
+            greeting = "Good morning!"
+            edition = "Morning"
+        elif hour < 17:
+            greeting = "Good afternoon!"
+            edition = "Afternoon"
+        else:
+            greeting = "Good evening!"
+            edition = "Evening"
+
         # Build the script
         script_parts = [
-            "Good morning! Here is your daily news briefing from Bharat Vanguard News."
+            f"{greeting} Here is your {edition} news briefing from Bharat Vanguard News."
         ]
         
         for idx, article in enumerate(articles, 1):
@@ -40,17 +60,20 @@ async def main():
             script_parts.append(article.title + ".")
             script_parts.append(summary.summary_medium)
             
-        script_parts.append("That's all for today. Stay informed, and have a great day!")
+        script_parts.append("That's all for now. Stay informed, and have a great day!")
         
         full_script = "\n\n".join(script_parts)
         print("Generated Script:\n", full_script)
         
         # Ensure podcast directory exists
-        import os
         podcast_dir = "apps/frontend/public/podcast"
         os.makedirs(podcast_dir, exist_ok=True)
         
-        output_file = os.path.join(podcast_dir, "latest.mp3")
+        # Generate filenames
+        timestamp = now.strftime("%Y-%m-%d_%H-%M")
+        filename = f"podcast_{timestamp}_{edition}.mp3"
+        output_file = os.path.join(podcast_dir, filename)
+        latest_file = os.path.join(podcast_dir, "latest.mp3")
         
         # Use gTTS (Google Text-to-Speech) which is reliable and free
         from gtts import gTTS
@@ -61,7 +84,53 @@ async def main():
         # Save blocking call in a thread
         await asyncio.to_thread(tts.save, output_file)
         
-        print(f"Podcast saved to {output_file}")
+        # Copy to latest.mp3 for backward compatibility
+        import shutil
+        shutil.copy2(output_file, latest_file)
+        
+        # Update history JSON
+        history_file = os.path.join(podcast_dir, "podcast_history.json")
+        history = []
+        if os.path.exists(history_file):
+            try:
+                with open(history_file, 'r') as f:
+                    history = json.load(f)
+            except Exception:
+                pass
+                
+        # Add new entry
+        display_date = now.strftime("%b %d")
+        history.insert(0, {
+            "title": f"{edition} Briefing - {display_date}",
+            "filename": filename,
+            "date": now.isoformat(),
+            "timestamp": now.timestamp()
+        })
+        
+        # Prune old files (> 7 days)
+        seven_days_ago = now.timestamp() - (7 * 24 * 3600)
+        
+        # Filter history to keep only last 7 days
+        pruned_history = [entry for entry in history if entry.get("timestamp", 0) > seven_days_ago]
+        
+        # Delete old MP3s physically
+        kept_files = {entry["filename"] for entry in pruned_history}
+        kept_files.add("latest.mp3")
+        
+        for mp3_path in glob.glob(os.path.join(podcast_dir, "*.mp3")):
+            mp3_file = os.path.basename(mp3_path)
+            if mp3_file not in kept_files:
+                try:
+                    os.remove(mp3_path)
+                    print(f"Deleted old podcast: {mp3_file}")
+                except Exception as e:
+                    print(f"Failed to delete {mp3_file}: {e}")
+                    
+        # Save history back
+        with open(history_file, 'w') as f:
+            json.dump(pruned_history, f, indent=2)
+        
+        print(f"Podcast saved to {output_file} and history updated.")
 
 if __name__ == "__main__":
     asyncio.run(main())
