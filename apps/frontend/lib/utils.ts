@@ -96,7 +96,7 @@ export function getTrustLabel(score?: number | null): string {
 
 /** Get CSS class for sentiment */
 export function getSentimentClass(sentiment?: string | null): string {
-  switch (sentiment) {
+  switch (sentiment?.toLowerCase()) {
     case 'positive': return 'text-emerald';
     case 'negative': return 'text-rose';
     case 'neutral':  return 'text-text-muted';
