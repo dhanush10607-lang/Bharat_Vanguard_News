@@ -61,7 +61,7 @@ export function Navbar() {
 
           {/* ── Logo ── */}
           <Link href="/" className="flex items-center gap-2 group" id="nav-logo">
-            <img src="/BVNlogo.svg" alt="Bharat Vanguard News" className="h-8 w-auto" />
+            <img src="/BVNlogo.svg" alt="Bharat Vanguard News" className="h-8 sm:h-10 md:h-11 lg:h-12 w-auto transition-all" />
           </Link>
 
           {/* ── Desktop Nav ── */}
