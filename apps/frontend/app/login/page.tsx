@@ -51,6 +51,8 @@ export default function LoginPage() {
       }
 
       if (result.access_token) {
+        // Save the token FIRST so authApi.me() can use it in its headers
+        localStorage.setItem('bvn_token', result.access_token);
         const user = result.user || await authApi.me();
         saveAuth(result.access_token, user);
         toast.success(mode === 'login' ? 'Welcome back!' : 'Account created!');

@@ -10,7 +10,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from pydantic import BaseModel, EmailStr
-import bcrypt
+from passlib.context import CryptContext
 from jose import JWTError, jwt
 
 from shared.database import get_db
@@ -18,6 +18,7 @@ from shared.models import User, UserRole
 from shared.config import settings
 
 router = APIRouter()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/users/login")
 
 
@@ -61,13 +62,11 @@ class UserProfile(BaseModel):
 # ============================================================
 
 def verify_password(plain: str, hashed: str) -> bool:
-    try:
-        return bcrypt.checkpw(plain.encode('utf-8'), hashed.encode('utf-8'))
-    except Exception:
-        return False
+    return pwd_context.verify(plain, hashed)
+
 
 def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    return pwd_context.hash(password)
 
 
 def create_token(user_id: str) -> str:
