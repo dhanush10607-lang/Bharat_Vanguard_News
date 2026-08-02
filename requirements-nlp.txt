@@ -15,7 +15,7 @@ spacy
 
 # --- Transformers & PyTorch ---
 transformers
-edge-tts==0.0.14
+edge-tts>=6.0.0
 torch
 sentencepiece
 
