@@ -134,6 +134,10 @@ class RSSCollector:
         elif "description" in entry:
             description = clean_text(remove_html_tags(entry.description))
 
+        # Clean up Hacker News metadata commonly found in description
+        import re
+        description = re.sub(r'Article URL:.*', '', description, flags=re.IGNORECASE | re.DOTALL).strip()
+
         # Truncate description to avoid storing huge raw HTML snippets
         description = truncate(description, max_length=500)
 

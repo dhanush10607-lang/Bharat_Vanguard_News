@@ -185,9 +185,6 @@ export default async function ArticlePage({ params }: Props) {
               ) : (
                 <>
                   <p>{stripHtml(article.description)}</p>
-                  <p className="text-text-muted text-base mt-6 italic">
-                    Full article content is fetched after the parser processes this article.
-                  </p>
                 </>
               )}
             </div>
