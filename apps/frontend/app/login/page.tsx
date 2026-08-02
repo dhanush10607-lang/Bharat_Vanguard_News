@@ -56,7 +56,7 @@ export default function LoginPage() {
         const user = result.user || await authApi.me();
         saveAuth(result.access_token, user);
         toast.success(mode === 'login' ? 'Welcome back!' : 'Account created!');
-        router.push('/');
+        window.location.href = '/';
       }
     } catch (err: any) {
       toast.error(err.message || 'Authentication failed');
