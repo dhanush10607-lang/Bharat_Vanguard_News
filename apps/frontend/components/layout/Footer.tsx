@@ -41,7 +41,7 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center mb-4 w-fit group">
-              <img src="/BVNlogo.svg" alt="Bharat Vanguard News" className="h-8 sm:h-10 md:h-11 lg:h-12 w-auto grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all" />
+              <img src="/BVNlogo.svg" alt="Bharat Vanguard News" className="h-10 sm:h-11 md:h-12 lg:h-12 w-auto grayscale group-hover:grayscale-0 opacity-70 group-hover:opacity-100 transition-all" />
             </Link>
             <p className="text-sm text-text-muted max-w-xs leading-relaxed mb-4">
               AI-powered news intelligence platform. Transparent, searchable, and sourced.
