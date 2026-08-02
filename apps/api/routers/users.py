@@ -197,8 +197,10 @@ async def get_bookmarked_articles_details(
 ):
     """Get the full article objects for all bookmarks of the user."""
     # Note: for a large number of bookmarks, this should be paginated
+    from sqlalchemy.orm import selectinload
     result = await db.execute(
         select(Article)
+        .options(selectinload(Article.publisher))
         .join(UserBookmark, UserBookmark.article_id == Article.article_id)
         .where(UserBookmark.user_id == current_user.user_id)
         .order_by(UserBookmark.created_at.desc())
@@ -207,8 +209,8 @@ async def get_bookmarked_articles_details(
     articles = result.scalars().all()
     
     # We must convert to dicts to match what the frontend expects
-    from apps.api.routers.articles import ArticleBrief
-    articles_out = [ArticleBrief.model_validate(a) for a in articles]
+    from apps.api.routers.articles import ArticleListItem
+    articles_out = [ArticleListItem.model_validate(a) for a in articles]
     return {"items": articles_out}
 
 
