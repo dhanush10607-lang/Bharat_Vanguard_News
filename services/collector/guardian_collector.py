@@ -23,9 +23,8 @@ from shared.config import settings
 from shared.database import AsyncSessionLocal
 from shared.models import Article, Publisher, ArticleStatus
 from shared.utils.hashing import hash_url
-from shared.utils.slugify import make_slug
-from shared.utils.date_utils import parse_date, utc_now
-from shared.utils.text_utils import clean_text, count_words, estimate_reading_time
+from shared.utils.date_utils import parse_date
+from shared.utils.text_utils import clean_text
 
 logger = logging.getLogger("collector.guardian")
 

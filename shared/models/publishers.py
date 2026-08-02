@@ -3,7 +3,6 @@ TruthLens AI — Publishers Model
 Represents news publishers/sources (BBC, Reuters, The Hindu, etc.)
 """
 import uuid
-from datetime import datetime
 from sqlalchemy import Boolean, Column, DateTime, Float, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship

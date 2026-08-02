@@ -235,7 +235,6 @@ class NLPWorker:
 
 
 async def main():
-    import time
 
     # How often to check for new raw articles (in seconds)
     POLL_INTERVAL_SECONDS = 60  # Check every 60 seconds

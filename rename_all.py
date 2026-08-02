@@ -21,7 +21,7 @@ for dirpath, dirs, files in os.walk(root):
                     f.write(new_content)
                 print(f"Updated {fpath}")
                 count += 1
-        except Exception as e:
+        except Exception:
             pass
 
 print(f"Total updated: {count}")

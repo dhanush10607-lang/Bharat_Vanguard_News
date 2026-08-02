@@ -31,7 +31,7 @@ Setup (one-time, ~5 minutes):
      - Paste Client ID and Secret
   3. Add GOOGLE_CLIENT_ID, SUPABASE_JWT_SECRET to your .env
 """
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import RedirectResponse
@@ -39,12 +39,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from pydantic import BaseModel
 from jose import jwt, JWTError
-import httpx
 
 from shared.database import get_db
 from shared.models import User, UserRole
 from shared.config import settings
-from apps.api.routers.users import create_token, hash_password
+from apps.api.routers.users import create_token
 
 router = APIRouter()
 

@@ -2,8 +2,6 @@
 Bharat Vanguard News (BVN) — Slug Generator
 Creates URL-safe slugs from article titles.
 """
-import re
-import unicodedata
 from slugify import slugify as _slugify
 
 

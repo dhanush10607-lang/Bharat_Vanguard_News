@@ -2,7 +2,6 @@ import asyncio
 import json
 import sys
 from pathlib import Path
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 # Ensure project root is in path

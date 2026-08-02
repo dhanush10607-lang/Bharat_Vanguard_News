@@ -13,7 +13,6 @@ Features:
 import asyncio
 import logging
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 import feedparser
@@ -29,7 +28,6 @@ from shared.config import settings
 from shared.database import AsyncSessionLocal
 from shared.models import Article, Publisher, ArticleStatus, CollectionRun
 from shared.utils.hashing import hash_url
-from shared.utils.slugify import make_slug
 from shared.utils.date_utils import parse_date, utc_now
 from shared.utils.text_utils import clean_text, truncate, remove_html_tags
 from services.collector.feed_config import PUBLISHERS, PublisherConfig, FeedSource

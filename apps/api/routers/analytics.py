@@ -4,7 +4,6 @@ Returns pre-aggregated analytics data for dashboards, trending topics,
 entity spotlight, volume charts, and sentiment breakdowns.
 """
 from typing import Optional
-from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc, and_
@@ -12,7 +11,7 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta, timezone
 
 from shared.database import get_db
-from shared.models import Article, Entity, ArticleEntity, Publisher, ArticleStatus, Event, EventArticle
+from shared.models import Article, Entity, ArticleEntity, Publisher, ArticleStatus, Event
 
 router = APIRouter()
 
@@ -86,7 +85,7 @@ async def get_analytics_summary(db: AsyncSession = Depends(get_db)):
     total_articles = total_result.scalar() or 0
 
     total_pub_result = await db.execute(
-        select(func.count()).select_from(Publisher).where(Publisher.active == True)
+        select(func.count()).select_from(Publisher).where(Publisher.active is True)
     )
     total_publishers = total_pub_result.scalar() or 0
 

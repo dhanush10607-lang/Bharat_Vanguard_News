@@ -8,7 +8,6 @@ To add a new feed:
 2. The RSS collector will automatically pick it up on next run
 """
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 @dataclass

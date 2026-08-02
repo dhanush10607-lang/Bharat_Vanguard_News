@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 from shared.database import get_db
-from shared.models import Event, EventArticle, Article, Publisher, TrustSignal, AISummary
+from shared.models import Event, EventArticle, Article, Publisher, TrustSignal
 
 router = APIRouter()
 

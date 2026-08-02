@@ -4,7 +4,7 @@ Core model representing individual news articles collected from publishers.
 """
 import uuid
 from sqlalchemy import (
-    Boolean, Column, DateTime, Enum, Float, ForeignKey,
+    Boolean, Column, DateTime, Enum, ForeignKey,
     Integer, String, Text, func
 )
 from sqlalchemy.dialects.postgresql import UUID

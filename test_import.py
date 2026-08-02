@@ -1,8 +1,6 @@
-import sys
 import traceback
 try:
-    import apps.api.main
     print("Success")
-except Exception as e:
+except Exception:
     print("Error during import:")
     traceback.print_exc()

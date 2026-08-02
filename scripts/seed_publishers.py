@@ -7,11 +7,9 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-import uuid
 
-from shared.database import AsyncSessionLocal, init_db
+from shared.database import AsyncSessionLocal
 from shared.models import Publisher
 
 PUBLISHERS = [

@@ -31,7 +31,6 @@ async def main():
         import json
         import os
         import glob
-        import time
 
         now = datetime.datetime.now()
         hour = now.hour
@@ -78,7 +77,7 @@ async def main():
         # Use gTTS (Google Text-to-Speech) which is reliable and free
         from gtts import gTTS
         
-        print(f"Generating audio with gTTS...")
+        print("Generating audio with gTTS...")
         tts = gTTS(text=full_script, lang='en', tld='com.au')  # Australian accent for a unique professional tone
         
         # Save blocking call in a thread

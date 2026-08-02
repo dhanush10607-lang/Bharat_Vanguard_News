@@ -4,7 +4,7 @@ Stores explainable confidence/transparency signals for articles and events.
 IMPORTANT: This is NOT a fact-check. It measures evidence strength, not truth.
 """
 import uuid
-from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, func
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import relationship
 from shared.database import Base

@@ -8,7 +8,7 @@ from typing import List, Tuple
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from shared.models import ArticleEmbedding, Article
+from shared.models import ArticleEmbedding
 
 logger = logging.getLogger("dedup.engine")
 
