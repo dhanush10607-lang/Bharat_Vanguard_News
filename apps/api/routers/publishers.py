@@ -9,7 +9,7 @@ router = APIRouter()
 
 @router.get("/")
 async def list_publishers(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Publisher).where(Publisher.active.is_(True)).order_by(Publisher.name))
+    result = await db.execute(select(Publisher).where(Publisher.active == True).order_by(Publisher.name))  # noqa: E712
     publishers = result.scalars().all()
     return [{"publisher_id": str(p.publisher_id), "name": p.name, "slug": p.slug,
              "country": p.country, "website": p.website, "is_official": p.is_official,
