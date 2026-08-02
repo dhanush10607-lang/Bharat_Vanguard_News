@@ -10,6 +10,18 @@ from fastapi.responses import ORJSONResponse
 
 from shared.config import settings
 
+from apps.api.routers import (
+    articles,
+    events,
+    publishers,
+    entities,
+    analytics,
+    search,
+    oauth,
+    users,
+    magazines
+)
+
 # Configure logging
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper()),
@@ -62,17 +74,7 @@ app.add_middleware(
 # ============================================================
 #  ROUTERS
 # ============================================================
-from apps.api.routers import (
-    articles,
-    events,
-    publishers,
-    entities,
-    analytics,
-    search,
-    oauth,
-    users,
-    magazines
-)
+
 
 app.include_router(articles.router,    prefix="/api/v1/articles",    tags=["Articles"])
 app.include_router(events.router,      prefix="/api/v1/events",      tags=["Events"])
