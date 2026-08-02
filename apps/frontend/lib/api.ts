@@ -216,15 +216,33 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 // ============================================================
 
 export const articlesApi = {
-  list: (params?: {
+  list: ({
+    page = 1,
+    page_size = 12,
+    status = 'published',
+    category,
+    publisher_slug,
+    country,
+    language,
+    sort_by,
+  }: {
     page?: number;
     page_size?: number;
+    status?: string;
     category?: string;
+    publisher_slug?: string;
     country?: string;
     language?: string;
-    publisher_slug?: string;
-    status?: string;
-  }) => request<PaginatedArticles>('/api/v1/articles', { params: params as any }),
+    sort_by?: 'published_time' | 'likes';
+  }) => {
+    const params: Record<string, any> = { page, page_size, status };
+    if (category) params.category = category;
+    if (publisher_slug) params.publisher_slug = publisher_slug;
+    if (country) params.country = country;
+    if (language) params.language = language;
+    if (sort_by) params.sort_by = sort_by;
+    return request<PaginatedArticles>('/api/v1/articles', { params });
+  },
 
   get: (slug: string) => request<Article>(`/api/v1/articles/${slug}`),
 
@@ -353,6 +371,14 @@ export const authApi = {
 
   toggleBookmark: (article_id: string) => 
     request<{ status: string; article_id: string }>(`/api/v1/users/bookmarks/articles/${article_id}`, {
+      method: 'POST',
+    }),
+
+  getLikes: () => 
+    request<{ liked_article_ids: string[] }>('/api/v1/users/likes/articles'),
+
+  toggleLike: (article_id: string) => 
+    request<{ status: string; article_id: string }>(`/api/v1/users/likes/articles/${article_id}`, {
       method: 'POST',
     }),
 };

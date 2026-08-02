@@ -47,6 +47,7 @@ class ArticleListItem(BaseModel):
     word_count: Optional[int]
     publisher: Optional[PublisherBrief]
     confidence_score: Optional[float] = None
+    likes_count: int = 0
 
     class Config:
         from_attributes = True
@@ -84,6 +85,7 @@ async def list_articles(
     language: Optional[str] = Query(None, description="Filter by language code"),
     publisher_slug: Optional[str] = Query(None, description="Filter by publisher slug"),
     status: Optional[str] = Query("published", description="Article status filter"),
+    sort_by: str = Query("published_time", description="Sort by 'published_time' or 'likes'"),
     db: AsyncSession = Depends(get_db),
 ):
     """
@@ -128,10 +130,14 @@ async def list_articles(
     query = (
         select(Article, Publisher)
         .join(Publisher, Article.publisher_id == Publisher.publisher_id)
-        .order_by(desc(Article.published_time))
         .offset(offset)
         .limit(page_size)
     )
+    
+    if sort_by == "likes":
+        query = query.order_by(desc(Article.likes_count), desc(Article.published_time))
+    else:
+        query = query.order_by(desc(Article.published_time))
     if filters:
         query = query.where(and_(*filters))
 
@@ -161,6 +167,7 @@ async def list_articles(
                 logo_url=publisher.logo_url,
                 reputation_score=publisher.reputation_score,
             ),
+            likes_count=article.likes_count or 0
         )
         items.append(item)
 

@@ -8,7 +8,7 @@ import { NewsCard, NewsCardSkeleton } from '@/components/news/NewsCard';
 export function TrendingSection() {
   const { data, isLoading } = useQuery({
     queryKey: ['articles', 'trending'],
-    queryFn: () => articlesApi.list({ page: 1, page_size: 4, status: 'published' }),
+    queryFn: () => articlesApi.list({ page: 1, page_size: 4, status: 'published', sort_by: 'likes' }),
   });
 
   return (

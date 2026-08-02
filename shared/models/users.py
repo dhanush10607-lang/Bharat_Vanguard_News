@@ -43,6 +43,7 @@ class User(Base):
 
     # Relationships
     bookmarks = relationship("UserBookmark", back_populates="user", lazy="select")
+    likes = relationship("UserLike", back_populates="user", lazy="select")
     history = relationship("UserHistory", back_populates="user", lazy="select")
 
     def __repr__(self) -> str:
@@ -59,6 +60,17 @@ class UserBookmark(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="bookmarks")
+
+
+class UserLike(Base):
+    __tablename__ = "user_likes"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
+    article_id = Column(UUID(as_uuid=True), ForeignKey("articles.article_id"), nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User", back_populates="likes")
 
 
 class UserHistory(Base):

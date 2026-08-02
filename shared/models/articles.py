@@ -61,6 +61,7 @@ class Article(Base):
     word_count = Column(Integer)
     reading_time_min = Column(Integer)                  # Estimated reading time in minutes
     is_paywalled = Column(Boolean, default=False)
+    likes_count = Column(Integer, default=0, index=True)
 
     # Relationships
     publisher = relationship("Publisher", back_populates="articles")

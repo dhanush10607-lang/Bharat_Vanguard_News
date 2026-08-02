@@ -9,6 +9,7 @@ import {
   formatScore, getCountryFlag, truncate
 } from '@/lib/utils';
 import { BookmarkButton } from '@/components/shared/BookmarkButton';
+import { LikeButton } from '@/components/shared/LikeButton';
 
 // ============================================================
 //  NEWS CARD — Standard card for grids and feeds
@@ -110,7 +111,10 @@ export function NewsCard({ article, index = 0, showPublisher = true, compact = f
                 </div>
               )}
               {article.article_id && (
-                <BookmarkButton articleId={article.article_id} size={14} className="p-1.5" />
+                <div className="flex items-center gap-1">
+                  <LikeButton articleId={article.article_id} initialLikes={article.likes_count} showCount size={14} className="p-1.5" />
+                  <BookmarkButton articleId={article.article_id} size={14} className="p-1.5" />
+                </div>
               )}
             </div>
           </div>
@@ -199,7 +203,8 @@ export function HeroCard({ article }: { article: Article }) {
               </div>
             )}
             {article.article_id && (
-              <div className="ml-auto">
+              <div className="ml-auto flex items-center gap-2">
+                <LikeButton articleId={article.article_id} initialLikes={article.likes_count} showCount size={18} className="p-2 bg-surface-2/30 backdrop-blur-sm text-white hover:bg-surface-2/60" />
                 <BookmarkButton articleId={article.article_id} size={18} className="p-2 bg-surface-2/30 backdrop-blur-sm text-white hover:bg-surface-2/60" />
               </div>
             )}

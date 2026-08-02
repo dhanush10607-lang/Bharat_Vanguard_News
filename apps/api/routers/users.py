@@ -14,7 +14,7 @@ import bcrypt
 from jose import JWTError, jwt
 
 from shared.database import get_db
-from shared.models import User, UserRole, UserBookmark, Article
+from shared.models import User, UserRole, UserBookmark, UserLike, Article
 from shared.config import settings
 
 router = APIRouter()
@@ -238,4 +238,63 @@ async def toggle_article_bookmark(
             article_id=article_id
         )
         db.add(new_bookmark)
+        return {"status": "added", "article_id": str(article_id)}
+
+# ============================================================
+#  LIKES
+# ============================================================
+
+@router.get("/likes/articles")
+async def get_liked_articles(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Get all article UUIDs liked by the user."""
+    result = await db.execute(
+        select(UserLike.article_id).where(
+            UserLike.user_id == current_user.user_id,
+            UserLike.article_id.isnot(None)
+        )
+    )
+    article_ids = result.scalars().all()
+    return {"liked_article_ids": [str(aid) for aid in article_ids]}
+
+
+@router.post("/likes/articles/{article_id}")
+async def toggle_article_like(
+    article_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Toggle a like for an article and update the article's like_count."""
+    result = await db.execute(
+        select(UserLike).where(
+            UserLike.user_id == current_user.user_id,
+            UserLike.article_id == article_id
+        )
+    )
+    existing = result.scalar_one_or_none()
+    
+    # Fetch the article to update its likes_count
+    article_result = await db.execute(select(Article).where(Article.article_id == article_id))
+    article = article_result.scalar_one_or_none()
+    
+    if not article:
+        raise HTTPException(status_code=404, detail="Article not found")
+
+    if existing:
+        await db.delete(existing)
+        if article.likes_count and article.likes_count > 0:
+            article.likes_count -= 1
+        return {"status": "removed", "article_id": str(article_id)}
+    else:
+        new_like = UserLike(
+            user_id=current_user.user_id,
+            article_id=article_id
+        )
+        db.add(new_like)
+        if article.likes_count is None:
+            article.likes_count = 1
+        else:
+            article.likes_count += 1
         return {"status": "added", "article_id": str(article_id)}
