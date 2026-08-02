@@ -202,7 +202,13 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(url, { ...fetchOptions, headers });
+  const finalFetchOptions: RequestInit = {
+    ...fetchOptions,
+    headers,
+    next: { revalidate: 30 }, // Revalidate cache every 30 seconds for live news
+  };
+
+  const response = await fetch(url, finalFetchOptions);
 
   if (!response.ok) {
     const error = await response.json().catch(() => ({ detail: 'Request failed' }));
