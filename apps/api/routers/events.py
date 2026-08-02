@@ -121,7 +121,7 @@ async def list_events(
     """List events (grouped stories), newest first."""
     filters = []
     if category:
-        filters.append(Event.category == category.lower())
+        filters.append(Event.category.ilike(f"%{category}%"))
     if country:
         filters.append(Event.country.ilike(f"%{country}%"))
     if breaking is not None:

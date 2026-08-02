@@ -109,7 +109,7 @@ async def list_articles(
             pass
 
     if category:
-        filters.append(Article.category == category.lower())
+        filters.append(Article.category.ilike(f"%{category}%"))
 
     if country:
         filters.append(Article.country.ilike(f"%{country}%"))

@@ -127,7 +127,7 @@ async def search(
     ]
 
     if category:
-        ft_conditions.append(Article.category == category.lower())
+        ft_conditions.append(Article.category.ilike(f"%{category}%"))
     if country:
         ft_conditions.append(Article.country.ilike(f"%{country}%"))
     if language:
