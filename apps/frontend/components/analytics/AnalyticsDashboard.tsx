@@ -177,9 +177,9 @@ export function AnalyticsDashboard() {
                 <div className="flex justify-between text-xs mb-1">
                   <span className={cn(
                     'capitalize font-medium',
-                    item.sentiment === 'positive' ? 'text-green-500' :
-                    item.sentiment === 'negative' ? 'text-red-500' :
-                    item.sentiment === 'mixed' ? 'text-amber' : 'text-text-muted'
+                    item.sentiment.toLowerCase() === 'positive' ? 'text-green-500' :
+                    item.sentiment.toLowerCase() === 'negative' ? 'text-red-500' :
+                    item.sentiment.toLowerCase() === 'mixed' ? 'text-amber' : 'text-text-muted'
                   )}>
                     {item.sentiment}
                   </span>
@@ -191,9 +191,9 @@ export function AnalyticsDashboard() {
                     animate={{ width: `${item.percentage}%` }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
                     className={cn('h-full rounded-full',
-                      item.sentiment === 'positive' ? 'bg-green-500' :
-                      item.sentiment === 'negative' ? 'bg-red-500' :
-                      item.sentiment === 'mixed' ? 'bg-amber' : 'bg-text-muted/50'
+                      item.sentiment.toLowerCase() === 'positive' ? 'bg-green-500' :
+                      item.sentiment.toLowerCase() === 'negative' ? 'bg-red-500' :
+                      item.sentiment.toLowerCase() === 'mixed' ? 'bg-amber' : 'bg-text-muted/50'
                     )}
                   />
                 </div>
