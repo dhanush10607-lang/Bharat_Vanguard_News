@@ -197,7 +197,7 @@ async def search(
             published_time=article.published_time,
             reading_time_min=article.reading_time_min,
             word_count=article.word_count,
-            sentiment=article.sentiment.value if article.sentiment else None,
+            sentiment=article.sentiment if article.sentiment else None,
             confidence_score=trust.confidence_score if trust else None,
             publisher=PublisherBrief(
                 publisher_id=publisher.publisher_id,
