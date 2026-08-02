@@ -227,10 +227,11 @@ async def toggle_article_bookmark(
             UserBookmark.article_id == article_id
         )
     )
-    existing = result.scalar_one_or_none()
+    existing_bookmarks = result.scalars().all()
     
-    if existing:
-        await db.delete(existing)
+    if existing_bookmarks:
+        for bk in existing_bookmarks:
+            await db.delete(bk)
         return {"status": "removed", "article_id": str(article_id)}
     else:
         new_bookmark = UserBookmark(
@@ -273,7 +274,7 @@ async def toggle_article_like(
             UserLike.article_id == article_id
         )
     )
-    existing = result.scalar_one_or_none()
+    existing_likes = result.scalars().all()
     
     # Fetch the article to update its likes_count
     article_result = await db.execute(select(Article).where(Article.article_id == article_id))
@@ -282,10 +283,14 @@ async def toggle_article_like(
     if not article:
         raise HTTPException(status_code=404, detail="Article not found")
 
-    if existing:
-        await db.delete(existing)
+    if existing_likes:
+        for like_obj in existing_likes:
+            await db.delete(like_obj)
+            
         if article.likes_count and article.likes_count > 0:
+            # We decrement by 1 conceptually, even if there were duplicate records
             article.likes_count -= 1
+            
         return {"status": "removed", "article_id": str(article_id)}
     else:
         new_like = UserLike(
