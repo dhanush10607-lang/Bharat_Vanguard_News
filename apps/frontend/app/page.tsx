@@ -49,30 +49,24 @@ export default async function HomePage() {
             <PodcastPlayer />
           </section>
 
+          {/* Trending Articles */}
+          <section>
+            <Suspense fallback={<div className="skeleton h-96 rounded-xl" />}>
+              <TrendingSection />
+            </Suspense>
+          </section>
+
           {/* Category quick-nav */}
           <section>
             <CategoryNav />
           </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Main Content Area: Top Stories & Latest */}
-            <div className="lg:col-span-2 space-y-12">
-              <section>
-                <Suspense fallback={<div className="skeleton h-96 rounded-xl" />}>
-                  <LatestSection />
-                </Suspense>
-              </section>
-            </div>
-
-            {/* Sidebar: Trending & Newsletter */}
-            <aside className="space-y-12">
-              <section>
-                <Suspense fallback={<div className="skeleton h-96 rounded-xl" />}>
-                  <TrendingSection />
-                </Suspense>
-              </section>
-            </aside>
-          </div>
+          {/* Main Content Area: Top Stories & Latest */}
+          <section>
+            <Suspense fallback={<div className="skeleton h-96 rounded-xl" />}>
+              <LatestSection />
+            </Suspense>
+          </section>
           
         </div>
       </div>
