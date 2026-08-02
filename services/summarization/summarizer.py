@@ -26,7 +26,7 @@ class Summarizer:
         logger.info("Loading Summarization model (facebook/bart-large-cnn)...")
         # device=-1 for CPU
         self.pipeline = pipeline(
-            "summarization",
+            "text-generation",
             model="facebook/bart-large-cnn",
             device=-1
         )
