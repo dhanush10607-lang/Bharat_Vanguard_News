@@ -135,7 +135,7 @@ async def list_articles(
     )
     
     if sort_by == "likes":
-        query = query.order_by(desc(Article.likes_count), desc(Article.published_time))
+        query = query.order_by(Article.likes_count.desc().nulls_last(), desc(Article.published_time))
     else:
         query = query.order_by(desc(Article.published_time))
     if filters:
