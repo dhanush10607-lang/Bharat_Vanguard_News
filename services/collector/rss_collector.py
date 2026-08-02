@@ -112,7 +112,7 @@ class RSSCollector:
         )
         return result.scalar_one_or_none() is not None
 
-    def parse_entry(self, entry: dict, feed: FeedSource, publisher_id) -> Optional[dict]:
+    async def parse_entry(self, entry: dict, feed: FeedSource, publisher_id) -> Optional[dict]:
         """
         Extract article data from a feedparser entry.
         Returns None if entry is invalid.
@@ -149,8 +149,24 @@ class RSSCollector:
         if "content" in entry and entry.content:
             content_val = entry.content[0].get("value", "")
             content = clean_text(remove_html_tags(content_val))
+            
         if not content:
             content = description  # Fallback if full content isn't in feed
+
+        # If content is just the description or very short, extract the actual web page!
+        if content == description or len(content.split()) < 100:
+            try:
+                import httpx
+                import trafilatura
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    resp = await client.get(url, follow_redirects=True)
+                    if resp.status_code == 200:
+                        extracted = trafilatura.extract(resp.text, include_comments=False, include_tables=False)
+                        if extracted and len(extracted.split()) > 50:
+                            content = extracted
+            except Exception as e:
+                import logging
+                logging.getLogger("collector.rss").debug(f"Failed to extract full text from URL {url}: {e}")
 
         # Generate content hash for deduplication
         import hashlib
@@ -237,7 +253,7 @@ class RSSCollector:
             stats["found"] += 1
 
             try:
-                article_data = self.parse_entry(entry, feed, publisher.publisher_id)
+                article_data = await self.parse_entry(entry, feed, publisher.publisher_id)
                 if not article_data:
                     stats["failed"] += 1
                     continue
