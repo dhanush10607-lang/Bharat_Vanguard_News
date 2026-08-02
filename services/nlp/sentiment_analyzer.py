@@ -26,12 +26,12 @@ class SentimentAnalyzer:
         Returns a dictionary with the sentiment (positive, neutral, negative) and confidence score.
         """
         if not text or not text.strip():
-            return {"sentiment": "neutral", "score": 0.0}
+            return {"sentiment": "NEUTRAL", "score": 0.0}
             
         try:
             # Model output: [{'label': 'positive', 'score': 0.85}]
             result = self.analyzer(text)[0]
-            label = result["label"].lower()
+            label = result["label"].upper()
             score = result["score"]
             
             return {
@@ -40,7 +40,7 @@ class SentimentAnalyzer:
             }
         except Exception as e:
             logger.error(f"Sentiment analysis failed: {e}")
-            return {"sentiment": "neutral", "score": 0.0}
+            return {"sentiment": "NEUTRAL", "score": 0.0}
 
 # Singleton
 _analyzer = None

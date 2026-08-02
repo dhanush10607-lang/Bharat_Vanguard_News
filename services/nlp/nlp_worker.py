@@ -180,7 +180,7 @@ class NLPWorker:
             db.add(ai_summary)
 
             # Assign sentiment and category to the article itself
-            article.sentiment = summary_result.get("sentiment", "neutral")
+            article.sentiment = summary_result.get("sentiment", "NEUTRAL")
             article.category = summary_result.get("category", "General")
             
             # Also update the main article stats

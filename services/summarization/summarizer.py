@@ -99,7 +99,7 @@ class Summarizer:
 
             # Sentiment Analysis
             sentiment_result = self.sentiment_pipeline(safe_text[:512])[0]
-            sentiment_label = sentiment_result['label'].lower()  # 'positive' or 'negative'
+            sentiment_label = sentiment_result['label'].upper()
 
             # Zero Shot Classification
             category_result = self.classifier_pipeline(safe_text[:512], self.categories)
