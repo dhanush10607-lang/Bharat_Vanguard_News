@@ -323,7 +323,7 @@ class RSSCollector:
                         total_stats["total_duplicate"] += stats["duplicate"]
 
                     except Exception as e:
-                        run.status = "failed"
+                        run.status = "FAILED"
                         run.error_message = str(e)
                         run.finished_at = utc_now()
                         logger.error(f"Feed failed: {feed.url} — {e}")
