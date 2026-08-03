@@ -104,7 +104,7 @@ async def list_articles(
 
     if status:
         try:
-            filters.append(Article.status == ArticleStatus(status))
+            filters.append(Article.status == ArticleStatus(status.upper()))
         except ValueError:
             pass
 

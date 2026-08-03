@@ -14,11 +14,11 @@ import enum
 
 
 class ArticleStatus(str, enum.Enum):
-    RAW = "raw"               # Just collected, no processing
-    PARSED = "parsed"         # HTML cleaned, content extracted
-    PROCESSED = "processed"   # NLP pipeline complete
-    PUBLISHED = "published"   # Visible on website
-    FAILED = "failed"         # Processing failed
+    RAW = "RAW"               # Just collected, no processing
+    PARSED = "PARSED"         # HTML cleaned, content extracted
+    PROCESSED = "PROCESSED"   # NLP pipeline complete
+    PUBLISHED = "PUBLISHED"   # Visible on website
+    FAILED = "FAILED"         # Processing failed
 
 
 
