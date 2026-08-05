@@ -2,7 +2,7 @@ name: Generate Daily Podcast
 
 on:
   schedule:
-    - cron: '30 0 * * *'  # 6:00 AM IST (Morning)
+    - cron: '30 23 * * *'  # 6:00 AM IST (Morning)
     - cron: '30 6 * * *'  # 12:00 PM IST (Afternoon)
     - cron: '30 10 * * *' # 4:00 PM IST (Evening)
   workflow_dispatch: # Allows manual trigger
