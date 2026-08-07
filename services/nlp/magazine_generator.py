@@ -8,7 +8,7 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from shared.database import AsyncSessionLocal
-from shared.models.articles import Article
+from shared.models.articles import Article, ArticleStatus
 from shared.models.magazines import Magazine
 from supabase import create_client, Client
 from dotenv import load_dotenv
@@ -71,7 +71,7 @@ async def generate_monthly_magazine():
         stmt = (
             select(Article)
             .options(selectinload(Article.ai_summary), selectinload(Article.trust_signal))
-            .filter(Article.status == 'published')
+            .filter(Article.status == ArticleStatus.PUBLISHED)
             .order_by(Article.published_time.desc())
             .limit(20)
         )
