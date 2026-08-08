@@ -6,13 +6,11 @@ from deep_translator import GoogleTranslator
 # Ensure we import from the right place depending on where this is run
 try:
     from shared.database import AsyncSessionLocal
-    from shared.models.articles import Article
     from shared.models.ai_summaries import AISummary
 except ImportError:
     import sys
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
     from shared.database import AsyncSessionLocal
-    from shared.models.articles import Article
     from shared.models.ai_summaries import AISummary
 
 TARGET_LANGUAGES = ['hi', 'ta', 'te', 'bn'] # Hindi, Tamil, Telugu, Bengali
