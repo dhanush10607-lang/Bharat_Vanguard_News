@@ -1,14 +1,15 @@
 'use client';
-import { useState } from 'react';
+
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { analyticsApi, type AnalyticsSummary } from '@/lib/api';
+import { analyticsApi } from '@/lib/api';
 import { motion } from 'framer-motion';
 import {
-  FileText, Globe, Zap, Calendar, TrendingUp, Users,
-  Shield, BarChart3, Activity, User, Building2, MapPin,
+  FileText, Globe, Zap, Calendar, TrendingUp,
+  BarChart3, Activity, User, Building2, MapPin,
   PieChart as PieChartIcon
 } from 'lucide-react';
-import { cn, capitalize, getSentimentClass, formatScore } from '@/lib/utils';
+import { cn, capitalize } from '@/lib/utils';
 import {
   BarChart, Bar, ResponsiveContainer, Tooltip, XAxis, YAxis,
   PieChart, Pie, Cell, CartesianGrid
@@ -18,13 +19,15 @@ import {
 //  STAT CARD
 // ============================================================
 
-function StatCard({ icon, label, value, sub, color }: {
+interface StatCardProps {
   icon: React.ReactNode;
   label: string;
   value: string | number;
   sub?: string;
   color: string;
-}) {
+}
+
+function StatCard({ icon, label, value, sub, color }: StatCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -57,11 +60,11 @@ function EntityIcon({ type }: { type: string }) {
 // ============================================================
 //  COLORS FOR RECHARTS
 // ============================================================
-const SENTIMENT_COLORS = {
-  positive: '#22c55e', // green-500
-  negative: '#ef4444', // red-500
-  mixed: '#f59e0b',    // amber-500
-  neutral: '#737373',  // neutral-500
+const SENTIMENT_COLORS: Record<string, string> = {
+  positive: '#22c55e',
+  negative: '#ef4444',
+  mixed: '#f59e0b',
+  neutral: '#737373',
 };
 
 // ============================================================
@@ -89,7 +92,7 @@ export function AnalyticsDashboard() {
     staleTime: 3 * 60 * 1000,
   });
 
-  if (summaryLoading) {
+  if (summaryLoading || !summary) {
     return (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {Array.from({ length: 8 }).map((_, i) => (
@@ -99,21 +102,21 @@ export function AnalyticsDashboard() {
     );
   }
 
-  const s = summary!;
+  const s = summary;
 
   // Format data for Recharts
-  const formattedVolumeData = (volumeData || []).map(v => ({
+  const formattedVolumeData = (volumeData || []).map((v) => ({
     name: new Date(v.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
     count: v.count,
   }));
 
-  const sentimentData = (s.sentiment_breakdown || []).map(item => ({
+  const sentimentData = (s.sentiment_breakdown || []).map((item) => ({
     name: capitalize(item.sentiment),
     value: item.percentage,
-    color: SENTIMENT_COLORS[item.sentiment.toLowerCase() as keyof typeof SENTIMENT_COLORS] || '#8884d8'
+    color: SENTIMENT_COLORS[item.sentiment.toLowerCase()] || '#8884d8'
   }));
 
-  const categoryData = (s.top_categories || []).slice(0, 8).map(cat => ({
+  const categoryData = (s.top_categories || []).slice(0, 8).map((cat) => ({
     name: capitalize(cat.category),
     value: cat.article_count,
   }));
@@ -130,8 +133,6 @@ export function AnalyticsDashboard() {
 
       {/* ── Volume chart + Sentiment ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-
-        {/* Volume chart */}
         <div className="card p-5 lg:col-span-2">
           <div className="flex items-center gap-2 mb-4">
             <Activity size={16} className="text-primary" />
@@ -159,7 +160,6 @@ export function AnalyticsDashboard() {
           )}
         </div>
 
-        {/* Sentiment breakdown */}
         <div className="card p-5">
           <div className="flex items-center gap-2 mb-4">
             <PieChartIcon size={16} className="text-primary" />
@@ -179,7 +179,7 @@ export function AnalyticsDashboard() {
                     dataKey="value"
                   >
                     {sentimentData.map((entry, index) => (
-                      <Cell key={\`cell-\${index}\`} fill={entry.color} stroke="transparent" />
+                      <Cell key={`cell-${index}`} fill={entry.color} stroke="transparent" />
                     ))}
                   </Pie>
                   <Tooltip 
@@ -192,7 +192,6 @@ export function AnalyticsDashboard() {
               <p className="text-sm text-text-muted text-center">No sentiment data</p>
             )}
             
-            {/* Legend inside pie */}
             {sentimentData.length > 0 && (
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <span className="text-2xl font-bold text-text-primary">
@@ -207,8 +206,6 @@ export function AnalyticsDashboard() {
 
       {/* ── Categories + Publishers ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-        {/* Top categories (Recharts Bar) */}
         <div className="card p-5">
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 size={16} className="text-primary" />
@@ -230,7 +227,6 @@ export function AnalyticsDashboard() {
           </div>
         </div>
 
-        {/* Top publishers */}
         <div className="card p-5">
           <div className="flex items-center gap-2 mb-4">
             <Globe size={16} className="text-primary" />
@@ -274,7 +270,6 @@ export function AnalyticsDashboard() {
             <TrendingUp size={16} className="text-primary" />
             <h2 className="text-sm font-semibold text-text-primary">Trending Entities</h2>
           </div>
-          {/* Time filter */}
           <div className="flex items-center gap-1 bg-surface-2 p-1 rounded-lg">
             {[3, 7, 14, 30].map((d) => (
               <button
