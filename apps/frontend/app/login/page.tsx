@@ -14,6 +14,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { createClient } = require('@/lib/supabase/client');
+  const supabase = createClient();
 
   const [form, setForm] = useState({
     email: '', password: '', username: '', display_name: '',
@@ -26,8 +28,13 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     try {
-      const { oauth_url } = await authApi.googleUrl();
-      window.location.href = oauth_url;
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
     } catch (err: any) {
       toast.error(err.message || 'Google login unavailable');
       setGoogleLoading(false);
@@ -38,24 +45,27 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      let result;
       if (mode === 'login') {
-        result = await authApi.login(form.email, form.password);
-      } else {
-        result = await authApi.register({
+        const { error } = await supabase.auth.signInWithPassword({
           email: form.email,
           password: form.password,
-          username: form.username,
-          display_name: form.display_name,
         });
-      }
-
-      if (result.access_token) {
-        // Save the token FIRST so authApi.me() can use it in its headers
-        localStorage.setItem('bvn_token', result.access_token);
-        const user = result.user || await authApi.me();
-        saveAuth(result.access_token, user);
-        toast.success(mode === 'login' ? 'Welcome back!' : 'Account created!');
+        if (error) throw error;
+        toast.success('Welcome back!');
+        window.location.href = '/';
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email: form.email,
+          password: form.password,
+          options: {
+            data: {
+              username: form.username,
+              display_name: form.display_name,
+            }
+          }
+        });
+        if (error) throw error;
+        toast.success('Account created! Please check your email.');
         window.location.href = '/';
       }
     } catch (err: any) {

@@ -25,6 +25,7 @@ class AISummary(Base):
     # Extracted metadata
     keywords = Column(JSONB, default=list)  # ["openai", "gpt", "microsoft"]
     language = Column(String(10), default="en")
+    translations = Column(JSONB, default=dict) # {"hi": {"summary_short": "...", "summary_medium": "..."}}
     reading_time_min = Column(Integer)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())

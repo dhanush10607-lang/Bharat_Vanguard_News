@@ -30,7 +30,7 @@ export function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean | string>(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -127,6 +127,48 @@ export function Navbar() {
 
           {/* ── Right Side ── */}
           <div className="flex items-center gap-2">
+            {/* Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setDropdownOpen(dropdownOpen === 'lang' ? false : 'lang')}
+                className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-sm text-text-muted hover:text-text-primary hover:bg-surface-2 transition-all"
+              >
+                <Globe size={16} />
+              </button>
+              <AnimatePresence>
+                {dropdownOpen === 'lang' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full right-0 mt-2 w-32 card-glass p-1.5 grid grid-cols-1 gap-0.5"
+                    onMouseLeave={() => setDropdownOpen(false)}
+                  >
+                    {[
+                      { code: 'en', label: 'English' },
+                      { code: 'hi', label: 'हिंदी (Hindi)' },
+                      { code: 'ta', label: 'தமிழ் (Tamil)' },
+                      { code: 'te', label: 'తెలుగు (Telugu)' },
+                      { code: 'bn', label: 'বাংলা (Bengali)' },
+                    ].map(lang => (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          if (typeof window !== 'undefined') localStorage.setItem('bvn_language', lang.code);
+                          setDropdownOpen(false);
+                          window.location.reload();
+                        }}
+                        className="px-3 py-2 text-left rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
+                      >
+                        {lang.label}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Search icon */}
             <Link
               href="/search"

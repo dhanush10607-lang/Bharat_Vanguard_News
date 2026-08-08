@@ -5,42 +5,14 @@ import { analyticsApi, type AnalyticsSummary } from '@/lib/api';
 import { motion } from 'framer-motion';
 import {
   FileText, Globe, Zap, Calendar, TrendingUp, Users,
-  Shield, BarChart3, PieChart, Activity, User, Building2, MapPin
+  Shield, BarChart3, Activity, User, Building2, MapPin,
+  PieChart as PieChartIcon
 } from 'lucide-react';
 import { cn, capitalize, getSentimentClass, formatScore } from '@/lib/utils';
-
-// ============================================================
-//  MINI CHART — Bar chart built purely in CSS/SVG (no dependencies)
-// ============================================================
-
-function BarMini({ values, color = '#3B82F6', height = 48 }: {
-  values: number[];
-  color?: string;
-  height?: number;
-}) {
-  if (!values.length) return null;
-  const max = Math.max(...values, 1);
-  return (
-    <div className="flex items-end gap-0.5" style={{ height }}>
-      {values.map((v, i) => (
-        <motion.div
-          key={i}
-          initial={{ scaleY: 0 }}
-          animate={{ scaleY: 1 }}
-          transition={{ delay: i * 0.02, duration: 0.4 }}
-          style={{
-            height: `${(v / max) * 100}%`,
-            backgroundColor: color,
-            flex: 1,
-            borderRadius: 2,
-            transformOrigin: 'bottom',
-            opacity: 0.7 + (v / max) * 0.3,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+import {
+  BarChart, Bar, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  PieChart, Pie, Cell, CartesianGrid
+} from 'recharts';
 
 // ============================================================
 //  STAT CARD
@@ -83,14 +55,13 @@ function EntityIcon({ type }: { type: string }) {
 }
 
 // ============================================================
-//  SENTIMENT BADGE
+//  COLORS FOR RECHARTS
 // ============================================================
-
-const SENTIMENT_COLOR: Record<string, string> = {
-  positive: 'bg-green-500/15 text-green-500 border-green-500/30',
-  negative: 'bg-red-500/15 text-red-500 border-red-500/30',
-  neutral:  'bg-text-muted/10 text-text-muted border-border',
-  mixed:    'bg-amber/15 text-amber border-amber/30',
+const SENTIMENT_COLORS = {
+  positive: '#22c55e', // green-500
+  negative: '#ef4444', // red-500
+  mixed: '#f59e0b',    // amber-500
+  neutral: '#737373',  // neutral-500
 };
 
 // ============================================================
@@ -129,7 +100,23 @@ export function AnalyticsDashboard() {
   }
 
   const s = summary!;
-  const volumeValues = volumeData?.map(v => v.count) || [];
+
+  // Format data for Recharts
+  const formattedVolumeData = (volumeData || []).map(v => ({
+    name: new Date(v.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+    count: v.count,
+  }));
+
+  const sentimentData = (s.sentiment_breakdown || []).map(item => ({
+    name: capitalize(item.sentiment),
+    value: item.percentage,
+    color: SENTIMENT_COLORS[item.sentiment.toLowerCase() as keyof typeof SENTIMENT_COLORS] || '#8884d8'
+  }));
+
+  const categoryData = (s.top_categories || []).slice(0, 8).map(cat => ({
+    name: capitalize(cat.category),
+    value: cat.article_count,
+  }));
 
   return (
     <div className="space-y-8">
@@ -150,14 +137,21 @@ export function AnalyticsDashboard() {
             <Activity size={16} className="text-primary" />
             <h2 className="text-sm font-semibold text-text-primary">Article Volume (30 days)</h2>
           </div>
-          {volumeValues.length > 0 ? (
-            <>
-              <BarMini values={volumeValues} height={80} />
-              <div className="flex justify-between mt-2">
-                <span className="text-2xs text-text-muted">{volumeData![0]?.date}</span>
-                <span className="text-2xs text-text-muted">{volumeData![volumeData!.length - 1]?.date}</span>
-              </div>
-            </>
+          {formattedVolumeData.length > 0 ? (
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={formattedVolumeData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
+                  <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                  <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => \`\${value}\`} />
+                  <Tooltip 
+                    cursor={{fill: 'rgba(255,255,255,0.05)'}}
+                    contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                  />
+                  <Bar dataKey="count" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           ) : (
             <div className="h-20 flex items-center justify-center text-text-muted text-sm">
               No volume data yet
@@ -168,39 +162,44 @@ export function AnalyticsDashboard() {
         {/* Sentiment breakdown */}
         <div className="card p-5">
           <div className="flex items-center gap-2 mb-4">
-            <PieChart size={16} className="text-primary" />
-            <h2 className="text-sm font-semibold text-text-primary">Sentiment</h2>
+            <PieChartIcon size={16} className="text-primary" />
+            <h2 className="text-sm font-semibold text-text-primary">Sentiment Analysis</h2>
           </div>
-          <div className="space-y-2.5">
-            {(s.sentiment_breakdown || []).map((item) => (
-              <div key={item.sentiment}>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className={cn(
-                    'capitalize font-medium',
-                    item.sentiment.toLowerCase() === 'positive' ? 'text-green-500' :
-                    item.sentiment.toLowerCase() === 'negative' ? 'text-red-500' :
-                    item.sentiment.toLowerCase() === 'mixed' ? 'text-amber' : 'text-text-muted'
-                  )}>
-                    {item.sentiment}
-                  </span>
-                  <span className="text-text-muted">{item.percentage}%</span>
-                </div>
-                <div className="w-full h-1.5 bg-surface-2 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${item.percentage}%` }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
-                    className={cn('h-full rounded-full',
-                      item.sentiment.toLowerCase() === 'positive' ? 'bg-green-500' :
-                      item.sentiment.toLowerCase() === 'negative' ? 'bg-red-500' :
-                      item.sentiment.toLowerCase() === 'mixed' ? 'bg-amber' : 'bg-text-muted/50'
-                    )}
+          <div className="h-64 w-full flex items-center justify-center relative">
+            {sentimentData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={sentimentData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {sentimentData.map((entry, index) => (
+                      <Cell key={\`cell-\${index}\`} fill={entry.color} stroke="transparent" />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    formatter={(value) => [\`\${value}%\`, 'Percentage']}
+                    contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
                   />
-                </div>
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-sm text-text-muted text-center">No sentiment data</p>
+            )}
+            
+            {/* Legend inside pie */}
+            {sentimentData.length > 0 && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-2xl font-bold text-text-primary">
+                  {sentimentData.find(s => s.name === 'Positive')?.value || 0}%
+                </span>
+                <span className="text-xs text-text-muted">Positive</span>
               </div>
-            ))}
-            {!s.sentiment_breakdown?.length && (
-              <p className="text-sm text-text-muted text-center py-4">No sentiment data yet</p>
             )}
           </div>
         </div>
@@ -209,35 +208,25 @@ export function AnalyticsDashboard() {
       {/* ── Categories + Publishers ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-        {/* Top categories */}
+        {/* Top categories (Recharts Bar) */}
         <div className="card p-5">
           <div className="flex items-center gap-2 mb-4">
             <BarChart3 size={16} className="text-primary" />
             <h2 className="text-sm font-semibold text-text-primary">Top Categories</h2>
           </div>
-          <div className="space-y-3">
-            {s.top_categories.slice(0, 8).map((cat, i) => (
-              <motion.div
-                key={cat.category}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="capitalize text-text-secondary font-medium">{cat.category}</span>
-                  <span className="text-text-muted">{cat.article_count.toLocaleString()}</span>
-                </div>
-                <div className="w-full h-1.5 bg-surface-2 rounded-full overflow-hidden">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${cat.percentage}%` }}
-                    transition={{ duration: 0.5, delay: i * 0.05 }}
-                    className="h-full rounded-full bg-primary"
-                    style={{ opacity: 1 - i * 0.07 }}
+          <div className="h-64 w-full">
+             <ResponsiveContainer width="100%" height="100%">
+               <BarChart data={categoryData} layout="vertical" margin={{ top: 0, right: 0, left: 20, bottom: 0 }}>
+                 <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="rgba(255,255,255,0.05)" />
+                 <XAxis type="number" hide />
+                 <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{fill: '#888888', fontSize: 12}} />
+                 <Tooltip 
+                    cursor={{fill: 'rgba(255,255,255,0.05)'}}
+                    contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
                   />
-                </div>
-              </motion.div>
-            ))}
+                 <Bar dataKey="value" fill="#8b5cf6" radius={[0, 4, 4, 0]} barSize={20} />
+               </BarChart>
+             </ResponsiveContainer>
           </div>
         </div>
 
@@ -247,8 +236,8 @@ export function AnalyticsDashboard() {
             <Globe size={16} className="text-primary" />
             <h2 className="text-sm font-semibold text-text-primary">Top Publishers</h2>
           </div>
-          <div className="space-y-2.5">
-            {s.top_publishers.slice(0, 8).map((pub, i) => (
+          <div className="space-y-2.5 mt-4">
+            {s.top_publishers.slice(0, 7).map((pub, i) => (
               <motion.div
                 key={pub.publisher_slug}
                 initial={{ opacity: 0, x: 12 }}
@@ -258,23 +247,19 @@ export function AnalyticsDashboard() {
               >
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-xs text-text-muted w-4 shrink-0">{i + 1}</span>
-                  <div className="w-5 h-5 rounded bg-surface-2 flex items-center justify-center shrink-0 overflow-hidden">
+                  <div className="w-6 h-6 rounded bg-surface-2 flex items-center justify-center shrink-0 overflow-hidden border border-border">
                     {pub.logo_url ? (
-                      <img src={pub.logo_url} alt={pub.publisher_name} className="w-5 h-5 object-contain" />
+                      <img src={pub.logo_url} alt={pub.publisher_name} className="w-4 h-4 object-contain" />
                     ) : (
-                      <Globe size={10} className="text-text-muted" />
+                      <Globe size={12} className="text-text-muted" />
                     )}
                   </div>
-                  <span className="text-xs text-text-primary font-medium truncate">{pub.publisher_name}</span>
-                  {pub.country && (
-                    <span className="text-2xs text-text-muted hidden sm:block">{pub.country}</span>
-                  )}
+                  <span className="text-sm text-text-primary font-medium truncate">{pub.publisher_name}</span>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  {pub.reputation_score != null && (
-                    <span className="text-2xs text-emerald font-medium">{Math.round(pub.reputation_score * 100)}%</span>
-                  )}
-                  <span className="text-xs text-text-muted tabular-nums">{pub.article_count.toLocaleString()}</span>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="text-xs text-text-muted tabular-nums bg-surface-2 px-2 py-0.5 rounded-full">
+                    {pub.article_count.toLocaleString()} articles
+                  </span>
                 </div>
               </motion.div>
             ))}
@@ -290,14 +275,14 @@ export function AnalyticsDashboard() {
             <h2 className="text-sm font-semibold text-text-primary">Trending Entities</h2>
           </div>
           {/* Time filter */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 bg-surface-2 p-1 rounded-lg">
             {[3, 7, 14, 30].map((d) => (
               <button
                 key={d}
                 onClick={() => setDays(d)}
                 className={cn(
-                  'px-2 py-0.5 rounded text-xs transition-colors',
-                  days === d ? 'bg-primary text-white' : 'text-text-muted hover:text-text-primary'
+                  'px-3 py-1 rounded-md text-xs font-medium transition-all',
+                  days === d ? 'bg-primary text-white shadow-sm' : 'text-text-muted hover:text-text-primary'
                 )}
               >
                 {d}d
@@ -311,19 +296,24 @@ export function AnalyticsDashboard() {
             Trending entities appear here after the NLP pipeline processes articles.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
             {(entitiesData || []).slice(0, 20).map((ent, i) => (
               <motion.div
                 key={ent.entity_id}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.03 }}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-surface-2 border border-border hover:border-border-2 transition-all"
+                transition={{ delay: i * 0.02 }}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface border border-border/50 hover:border-primary/30 hover:bg-surface-2 transition-all group"
               >
-                <EntityIcon type={ent.type} />
+                <div className="p-2 rounded-lg bg-surface-2 group-hover:bg-surface-3 transition-colors">
+                  <EntityIcon type={ent.type} />
+                </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-medium text-text-primary truncate">{ent.name}</p>
-                  <p className="text-2xs text-text-muted capitalize">{ent.type} · {ent.mention_count} mentions</p>
+                  <p className="text-sm font-semibold text-text-primary truncate">{ent.name}</p>
+                  <p className="text-xs text-text-muted mt-0.5 capitalize flex justify-between">
+                    <span>{ent.type}</span>
+                    <span className="text-primary-light font-medium">{ent.mention_count}</span>
+                  </p>
                 </div>
               </motion.div>
             ))}

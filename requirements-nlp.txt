@@ -36,3 +36,4 @@ pgvector
 # --- Text Processing ---
 nltk
 langdetect
+deep-translator

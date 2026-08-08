@@ -11,9 +11,9 @@ from shared.database import AsyncSessionLocal
 from shared.models.articles import Article, ArticleStatus
 from shared.models.magazines import Magazine
 from supabase import create_client, Client
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv(), override=True)
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")

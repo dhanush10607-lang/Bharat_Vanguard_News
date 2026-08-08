@@ -203,8 +203,18 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   };
 
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('bvn_token');
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    try {
+      const { createClient } = require('@/lib/supabase/client');
+      const supabase = createClient();
+      const { data } = await supabase.auth.getSession();
+      if (data?.session?.access_token) {
+        headers['Authorization'] = `Bearer ${data.session.access_token}`;
+      }
+    } catch (e) {
+      // Fallback for non-browser environments or missing deps
+      const token = localStorage.getItem('bvn_token');
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+    }
   }
 
   const finalFetchOptions: RequestInit = {
