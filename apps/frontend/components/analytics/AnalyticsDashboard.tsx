@@ -143,7 +143,7 @@ export function AnalyticsDashboard() {
                 <BarChart data={formattedVolumeData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
                   <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => \`\${value}\`} />
+                  <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
                   <Tooltip 
                     cursor={{fill: 'rgba(255,255,255,0.05)'}}
                     contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
@@ -183,7 +183,7 @@ export function AnalyticsDashboard() {
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value) => [\`\${value}%\`, 'Percentage']}
+                    formatter={(value) => [`${value}%`, 'Percentage']}
                     contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
                   />
                 </PieChart>
