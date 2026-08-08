@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Search, Menu, X, Zap, User, LogOut, Bookmark, ChevronDown } from 'lucide-react';
+import { Search, Menu, X, Zap, User, LogOut, Bookmark, ChevronDown, Globe } from 'lucide-react';
 import { cn, getStoredUser, clearAuth } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
