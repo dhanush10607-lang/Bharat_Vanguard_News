@@ -11,8 +11,8 @@ from shared.config import settings
 engine = create_async_engine(
     settings.database_url,
     echo=settings.debug,
-    pool_size=5,
-    max_overflow=5,
+    pool_size=2,
+    max_overflow=2,
     pool_pre_ping=True,         # Reconnect on stale connections
     pool_recycle=3600,          # Recycle connections every hour
     connect_args={"timeout": 60, "command_timeout": 60}, # Give cloud DB time to wake up
