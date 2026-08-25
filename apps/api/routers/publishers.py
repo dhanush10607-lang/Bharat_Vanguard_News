@@ -4,10 +4,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from shared.database import get_db
 from shared.models import Publisher
+from fastapi_cache.decorator import cache
 
 router = APIRouter()
 
 @router.get("/")
+@cache(expire=300)
 async def list_publishers(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Publisher).where(Publisher.active.isnot(False)).order_by(Publisher.name))
     publishers = result.scalars().all()
@@ -16,6 +18,7 @@ async def list_publishers(db: AsyncSession = Depends(get_db)):
              "reputation_score": p.reputation_score, "logo_url": p.logo_url} for p in publishers]
 
 @router.get("/{slug}")
+@cache(expire=300)
 async def get_publisher(slug: str, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Publisher).where(Publisher.slug == slug))
     publisher = result.scalar_one_or_none()

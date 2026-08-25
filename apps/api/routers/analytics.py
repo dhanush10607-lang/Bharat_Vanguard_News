@@ -12,6 +12,7 @@ from datetime import datetime, timedelta, timezone
 
 from shared.database import get_db
 from shared.models import Article, Entity, ArticleEntity, Publisher, ArticleStatus, Event
+from fastapi_cache.decorator import cache
 
 router = APIRouter()
 
@@ -71,6 +72,7 @@ class AnalyticsSummary(BaseModel):
 # ============================================================
 
 @router.get("/summary", response_model=AnalyticsSummary)
+@cache(expire=300)
 async def get_analytics_summary(db: AsyncSession = Depends(get_db)):
     """Get platform-wide analytics summary for the dashboard."""
     now = datetime.now(timezone.utc)
@@ -222,6 +224,7 @@ async def get_analytics_summary(db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/categories", response_model=list[CategoryStat])
+@cache(expire=300)
 async def get_category_stats(
     days: int = Query(7, ge=1, le=30),
     db: AsyncSession = Depends(get_db),
@@ -248,6 +251,7 @@ async def get_category_stats(
 
 
 @router.get("/countries")
+@cache(expire=300)
 async def get_country_stats(
     days: int = Query(7, ge=1, le=30),
     db: AsyncSession = Depends(get_db),
@@ -272,6 +276,7 @@ async def get_country_stats(
 
 
 @router.get("/volume", response_model=list[VolumePoint])
+@cache(expire=300)
 async def get_article_volume(
     days: int = Query(30, ge=1, le=90),
     category: Optional[str] = Query(None),
@@ -308,6 +313,7 @@ async def get_article_volume(
 
 
 @router.get("/sentiment", response_model=list[SentimentStat])
+@cache(expire=300)
 async def get_sentiment_breakdown(
     days: int = Query(7, ge=1, le=30),
     category: Optional[str] = Query(None),
@@ -343,6 +349,7 @@ async def get_sentiment_breakdown(
 
 
 @router.get("/trending-entities", response_model=list[TrendingEntity])
+@cache(expire=300)
 async def get_trending_entities(
     days: int = Query(7, ge=1, le=30),
     entity_type: Optional[str] = Query(None, description="Filter: person, organization, location"),

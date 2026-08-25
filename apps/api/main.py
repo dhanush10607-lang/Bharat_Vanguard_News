@@ -7,6 +7,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import ORJSONResponse
+from redis import asyncio as aioredis
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
 
 from shared.config import settings
 
@@ -40,6 +43,11 @@ async def lifespan(app: FastAPI):
         import sentry_sdk
         sentry_sdk.init(dsn=settings.sentry_dsn, traces_sample_rate=0.1)
         logger.info("Sentry initialized")
+
+    # Initialize Redis Cache
+    redis = aioredis.from_url(settings.redis_url, encoding="utf8", decode_responses=False)
+    FastAPICache.init(RedisBackend(redis), prefix="bvn-cache")
+    logger.info("Redis cache initialized")
 
     yield
 

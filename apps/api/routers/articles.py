@@ -12,6 +12,7 @@ from datetime import datetime
 
 from shared.database import get_db
 from shared.models import Article, Publisher, AISummary, TrustSignal, ArticleStatus
+from fastapi_cache.decorator import cache
 
 router = APIRouter()
 
@@ -84,6 +85,7 @@ class PaginatedArticles(BaseModel):
 # ============================================================
 
 @router.get("/", response_model=PaginatedArticles)
+@cache(expire=300)
 async def list_articles(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(20, ge=1, le=100, description="Items per page"),
@@ -188,6 +190,7 @@ async def list_articles(
 
 
 @router.get("/{slug}", response_model=ArticleDetail)
+@cache(expire=300)
 async def get_article(slug: str, db: AsyncSession = Depends(get_db)):
     """
     Get a single article by slug with full content, AI summary, and trust signals.
@@ -255,6 +258,7 @@ async def get_article(slug: str, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/latest/breaking", response_model=list[ArticleListItem])
+@cache(expire=300)
 async def get_breaking_news(
     limit: int = Query(5, ge=1, le=20),
     db: AsyncSession = Depends(get_db),
