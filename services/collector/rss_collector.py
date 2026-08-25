@@ -100,7 +100,7 @@ class RSSCollector:
                 rss_feeds=[{"url": f.url, "category": f.category} for f in config.feeds],
             )
             db.add(publisher)
-            await db.flush()
+            await db.commit()
             logger.info(f"Created publisher: {config.name}")
 
         return publisher
@@ -308,7 +308,7 @@ class RSSCollector:
                         status="running",
                     )
                     db.add(run)
-                    await db.flush()
+                    await db.commit()
 
                     try:
                         stats = await self.process_feed(db, publisher, feed, seen_url_hashes)
@@ -317,15 +317,20 @@ class RSSCollector:
                         run.articles_duplicate = str(stats["duplicate"])
                         run.status = "success"
                         run.finished_at = utc_now()
+                        await db.commit()
 
                         total_stats["total_found"] += stats["found"]
                         total_stats["total_new"] += stats["new"]
                         total_stats["total_duplicate"] += stats["duplicate"]
 
                     except Exception as e:
-                        run.status = "FAILED"
-                        run.error_message = str(e)
-                        run.finished_at = utc_now()
+                        await db.rollback()
+                        run = await db.get(CollectionRun, run.run_id)
+                        if run:
+                            run.status = "FAILED"
+                            run.error_message = str(e)
+                            run.finished_at = utc_now()
+                            await db.commit()
                         logger.error(f"Feed failed: {feed.url} — {e}")
 
                     # Polite delay between publishers
