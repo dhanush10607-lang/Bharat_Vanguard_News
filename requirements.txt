@@ -19,7 +19,7 @@ pgvector==0.3.5
 supabase==2.10.0
 
 # --- Redis ---
-redis[asyncio]==5.2.0
+redis[asyncio]>=4.5.2,<5.0.0
 celery[redis]==5.4.0
 fastapi-cache2[redis]==0.2.2
 
