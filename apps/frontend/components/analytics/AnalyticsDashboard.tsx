@@ -111,7 +111,7 @@ export function AnalyticsDashboard() {
   }));
 
   const sentimentData = (s.sentiment_breakdown || []).map((item) => ({
-    name: capitalize(item.sentiment),
+    name: capitalize(item.sentiment.toLowerCase()),
     value: item.percentage,
     color: SENTIMENT_COLORS[item.sentiment.toLowerCase()] || '#8884d8'
   }));
