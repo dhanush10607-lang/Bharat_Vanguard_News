@@ -59,11 +59,22 @@ class NLPWorker:
     async def get_raw_article_ids(self) -> List[str]:
         """Fetch IDs of a batch of unprocessed articles as plain strings."""
         async with AsyncSessionLocal() as db:
-            result = await db.execute(
-                select(Article.article_id)
-                .where(Article.status == ArticleStatus.RAW)
-                .limit(self.batch_size)
+            from sqlalchemy import update
+            stmt = (
+                update(Article)
+                .where(
+                    Article.article_id.in_(
+                        select(Article.article_id)
+                        .where(Article.status == ArticleStatus.RAW)
+                        .limit(self.batch_size)
+                        .with_for_update(skip_locked=True)
+                    )
+                )
+                .values(status=ArticleStatus.PROCESSED)
+                .returning(Article.article_id)
             )
+            result = await db.execute(stmt)
+            await db.commit()
             return [str(row[0]) for row in result.all()]
 
     async def _process_article(self, db: AsyncSession, article: Article):
