@@ -1,5 +1,11 @@
 [
   {
+    "title": "Afternoon Briefing - Oct 17",
+    "filename": "podcast_2026-10-17_15-08_Afternoon.mp3",
+    "date": "2026-10-17T15:08:09.436469",
+    "timestamp": 1792229889.436469
+  },
+  {
     "title": "Morning Briefing - Oct 17",
     "filename": "podcast_2026-10-17_06-54_Morning.mp3",
     "date": "2026-10-17T06:54:57.264361",
@@ -100,11 +106,5 @@
     "filename": "podcast_2026-10-10_16-51_Afternoon.mp3",
     "date": "2026-10-10T16:51:03.251799",
     "timestamp": 1791631263.251799
-  },
-  {
-    "title": "Morning Briefing - Oct 10",
-    "filename": "podcast_2026-10-10_08-01_Morning.mp3",
-    "date": "2026-10-10T08:01:10.887399",
-    "timestamp": 1791599470.887399
   }
 ]
